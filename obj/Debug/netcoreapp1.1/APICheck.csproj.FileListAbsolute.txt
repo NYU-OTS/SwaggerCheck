@@ -1,0 +1,9 @@
+c:\users\bt1124\documents\visual studio 2017\Projects\APICheck\bin\Debug\netcoreapp1.1\APICheck.deps.json
+c:\users\bt1124\documents\visual studio 2017\Projects\APICheck\bin\Debug\netcoreapp1.1\APICheck.runtimeconfig.json
+c:\users\bt1124\documents\visual studio 2017\Projects\APICheck\bin\Debug\netcoreapp1.1\APICheck.runtimeconfig.dev.json
+c:\users\bt1124\documents\visual studio 2017\Projects\APICheck\bin\Debug\netcoreapp1.1\APICheck.dll
+c:\users\bt1124\documents\visual studio 2017\Projects\APICheck\obj\Debug\netcoreapp1.1\APICheck.AssemblyInfo.cs
+c:\users\bt1124\documents\visual studio 2017\Projects\APICheck\obj\Debug\netcoreapp1.1\APICheck.csprojResolveAssemblyReference.cache
+C:\Users\bt1124\Documents\Visual Studio 2017\Projects\APICheck\bin\Debug\netcoreapp1.1\APICheck.pdb
+C:\Users\bt1124\Documents\Visual Studio 2017\Projects\APICheck\obj\Debug\netcoreapp1.1\APICheck.dll
+C:\Users\bt1124\Documents\Visual Studio 2017\Projects\APICheck\obj\Debug\netcoreapp1.1\APICheck.pdb

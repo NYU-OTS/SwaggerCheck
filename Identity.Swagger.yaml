@@ -1,0 +1,112 @@
+swagger: "2.0"
+info:
+  description: A federated User Identity server.
+  title: Ganesh Identity
+  version: "1.0.0"
+host: api.otss.admin.nyu.edu
+basePath: /ganesh/identity/v1
+schemes:
+  - https
+produces:
+- application/json
+paths:
+  /users:
+    get:
+      operationId: getAllUsers
+      summary: Retrieve all users
+      description: Get a list of known users from all sources.
+      parameters:
+        - name: id
+          in: query
+          description: Filter the list of users by the user ID as a partial match.
+          type: string
+        - name: from
+          in: query
+          description: Return only users after the given index
+          default: 0
+          type: number
+        - name: limit
+          in: query
+          description: Return only the given number of users
+          default: 20
+          type: number
+      responses:
+        "200":
+          description: A paginated list of known users.
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/User"
+  /users/{id}:
+    get:
+      operationId: getSingleUser
+      summary: Retrieve a single user
+      description: Get a single user by ID.
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the user.
+          type: string
+          required: true
+      responses:
+        "200":
+          description: The requested user.
+          schema:
+            $ref: "#/definitions/User"
+        "404":
+          description: No user was found with the given ID.
+  # This is a RESTful implementation of user login.
+  # Basically, treat the token as a resource that you need to
+  # POST a valid password to create.
+  /users/{id}/token:
+    post:
+      operationId: userToken
+      summary: Create a JWT authentication token
+      description: Validate the username and password given, and if they are correct, return a JWT that the user can use to prove their identity to other services that trust this identity server.
+      consumes:
+      - application/x-www-form-url-encoded
+      - application/json
+      parameters:
+      - name: id
+        in: path
+        description: The ID of the user.
+        required: true
+        type: string
+      - name: password
+        in: body
+        description: The user's password for identity verification.
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: The user identity and password are correct and have been verified, and a new JWT has been created for the user.
+          schema:
+            $ref: "#/definitions/Token"
+        "401":
+          description: The user identity and/or the password provided are incorrect.
+definitions:
+  User:
+    type: object
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+      givenName:
+        type: string
+      familyName:
+        type: string
+      emailAddress:
+        type: string
+        format: email
+  Token:
+    type: object
+    properties:
+      token:
+        type: string
+        format: jwt
+        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiSmFuZSBEb2UiLCJ0ZXN0Ijp0cnVlfQ.f-gcs0eNMFWdk11GV2yJa-JelIftijZCcAZGdeWYslE
+      expiry:
+        type: string
+        format: date-time
