@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Runtime.Loader;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Newtonsoft.Json.Linq;
+using NSwag;
 
 namespace APICheck
 {
@@ -14,23 +15,36 @@ namespace APICheck
         //public Type Controller;
         public HashSet<string> Httpmethods { get; set; }
         public string Route { get; set; }
+        public IEnumerable<string> param { get; set; }
 
+        //for testing
+        public Action(string route, params string[] httpMethods)
+        {
+            Route = route;
+            Httpmethods = new HashSet<string>(httpMethods);
+        }
+
+        //From binary
         public Action(MethodInfo action, string baseurl)
         {
             var attribute = action.GetCustomAttribute<HttpMethodAttribute>();
             var url = baseurl + (String.IsNullOrEmpty(attribute.Template) ? attribute.Template : "/" + attribute.Template); //checks if action has associated route
 
-            Route = url.TrimStart('/').TrimEnd('/');
-            Httpmethods = new HashSet<string>( attribute.HttpMethods);
+            Route = url.Trim('/');
+            Httpmethods = new HashSet<string>(attribute.HttpMethods);
+            var paramTypes = action.GetParameters().Select(p => p.ParameterType);
         }
 
-        public Action(JToken action, string url)
+        //From Swagger
+        public Action(string path, KeyValuePair<SwaggerOperationMethod, SwaggerOperation> action)
         {
-            Route = url.TrimStart('/').TrimEnd('/');
-            Httpmethods = new HashSet<string>(action.Value<JObject>()
-                .Properties()
-                .Select(p => p.Name.ToUpper()));
+            Route = path;
+            Httpmethods = new HashSet<string>();
+            Httpmethods.Add(action.Key.ToString());
+            var paramList =  action.Value.ActualParameters.Select(ps => ps.ActualSchema.ActualProperties);
+            var p1 = paramList.Select(p => p.Values.Select(m => m.Type));
         }
+        
       
         public override bool Equals(object obj)
         {

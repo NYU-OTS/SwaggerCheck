@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.Loader;
@@ -12,9 +13,10 @@ namespace APICheck
         {
             //Console.WriteLine("Enter relative path to compiled .dll file");
             //var path = Console.ReadLine();
+            var specs = new Swagger();
 
             var assemblyPath =
-                @"C:\Users\bt1124\Identity\Identity\bin\Debug\netcoreapp1.1\OTSS.Ganesh.Identity.dll";
+                @"C:\Users\bt1124\Permissions\Permissions\bin\Debug\netcoreapp1.1\OTSS.Ganesh.Permissions.dll";
 
             var assembly = AssemblyLoadContext.Default.LoadFromAssemblyPath(assemblyPath);
 
@@ -25,13 +27,18 @@ namespace APICheck
                 .Where(type => type.GetTypeInfo().CustomAttributes.Any()) //Is it not the BaseController Class
                 .Select(type => new Controller(type));
 
-            var actions = controllers.SelectMany(c => c.Actions).ToList();
+            var existingActions = controllers.SelectMany(c => c.Actions).ToList();
 
-            //var t = controllers.ElementAt(1);
-            //var c = new Controller(t);
-            var specs = new Swagger();
-            var swaggerActions = specs.Actions.ToList();
-            var check = actions[0].Equals(swaggerActions[0]);
+            //var specs = new Swagger();
+            //var swaggerActions = specs.Actions.ToList();
+            //swaggerActions.Add(new Action("/route", "GET"));
+            //Console.WriteLine(Same(swaggerActions, existingActions));
+        }
+
+        static bool Same(IEnumerable<Action> swaggerActions, IEnumerable<Action> existingActions)
+        {
+            //Linear search in low amounts can be faster than dictionary lookup
+            return !swaggerActions.Except(existingActions, new ActionComparer()).Any();
         }
     }
 }

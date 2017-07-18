@@ -1309,6 +1309,93 @@
           "lib/netstandard1.3/Newtonsoft.Json.dll": {}
         }
       },
+      "NJsonSchema/9.4.2": {
+        "type": "package",
+        "dependencies": {
+          "NETStandard.Library": "1.6.1",
+          "Newtonsoft.Json": "9.0.1"
+        },
+        "compile": {
+          "lib/netstandard1.0/NJsonSchema.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard1.0/NJsonSchema.dll": {}
+        }
+      },
+      "NJsonSchema.CodeGeneration/9.4.2": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.CSharp": "4.3.0",
+          "NETStandard.Library": "1.6.1",
+          "NJsonSchema": "9.4.2",
+          "Newtonsoft.Json": "9.0.1"
+        },
+        "compile": {
+          "lib/netstandard1.3/NJsonSchema.CodeGeneration.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard1.3/NJsonSchema.CodeGeneration.dll": {}
+        }
+      },
+      "NJsonSchema.CodeGeneration.CSharp/9.4.2": {
+        "type": "package",
+        "dependencies": {
+          "NETStandard.Library": "1.6.1",
+          "NJsonSchema": "9.4.2",
+          "NJsonSchema.CodeGeneration": "9.4.2",
+          "Newtonsoft.Json": "9.0.1"
+        },
+        "compile": {
+          "lib/netstandard1.3/NJsonSchema.CodeGeneration.CSharp.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard1.3/NJsonSchema.CodeGeneration.CSharp.dll": {}
+        }
+      },
+      "NSwag.CodeGeneration/11.3.3": {
+        "type": "package",
+        "dependencies": {
+          "NETStandard.Library": "1.6.1",
+          "NJsonSchema": "9.4.2",
+          "NJsonSchema.CodeGeneration": "9.4.2",
+          "NSwag.Core": "11.3.3",
+          "Newtonsoft.Json": "9.0.1"
+        },
+        "compile": {
+          "lib/netstandard1.3/NSwag.CodeGeneration.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard1.3/NSwag.CodeGeneration.dll": {}
+        }
+      },
+      "NSwag.CodeGeneration.CSharp/11.3.3": {
+        "type": "package",
+        "dependencies": {
+          "NETStandard.Library": "1.6.1",
+          "NJsonSchema.CodeGeneration.CSharp": "9.4.2",
+          "NSwag.CodeGeneration": "11.3.3"
+        },
+        "compile": {
+          "lib/netstandard1.3/NSwag.CodeGeneration.CSharp.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard1.3/NSwag.CodeGeneration.CSharp.dll": {}
+        }
+      },
+      "NSwag.Core/11.3.3": {
+        "type": "package",
+        "dependencies": {
+          "NETStandard.Library": "1.6.1",
+          "NJsonSchema": "9.4.2",
+          "Newtonsoft.Json": "9.0.1"
+        },
+        "compile": {
+          "lib/netstandard1.0/NSwag.Core.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard1.0/NSwag.Core.dll": {}
+        }
+      },
       "Remotion.Linq/2.1.1": {
         "type": "package",
         "dependencies": {
@@ -4679,6 +4766,86 @@
         "newtonsoft.json.10.0.3.nupkg.sha512",
         "newtonsoft.json.nuspec",
         "tools/install.ps1"
+      ]
+    },
+    "NJsonSchema/9.4.2": {
+      "sha512": "PvlC3RlRm9eqHGUnqYcTIfKFRGixGM310IRXtsy9CVdBorVZ7tZHlwfc0yyTLuWiQHPi3xu0jzbJK9XiLs/VYw==",
+      "type": "package",
+      "path": "njsonschema/9.4.2",
+      "files": [
+        "lib/net40/NJsonSchema.dll",
+        "lib/net40/NJsonSchema.xml",
+        "lib/net45/NJsonSchema.dll",
+        "lib/net45/NJsonSchema.xml",
+        "lib/netstandard1.0/NJsonSchema.dll",
+        "lib/netstandard1.0/NJsonSchema.xml",
+        "njsonschema.9.4.2.nupkg.sha512",
+        "njsonschema.nuspec"
+      ]
+    },
+    "NJsonSchema.CodeGeneration/9.4.2": {
+      "sha512": "JPKvXKCkPprd6qDE+6zKmnV7mS8pO7Sb76I1ATDND4XfWmthNZFudMj1YfXr4H/lcrCE9SAuW3OoHigjvf4wUw==",
+      "type": "package",
+      "path": "njsonschema.codegeneration/9.4.2",
+      "files": [
+        "lib/net451/NJsonSchema.CodeGeneration.dll",
+        "lib/net451/NJsonSchema.CodeGeneration.xml",
+        "lib/netstandard1.3/NJsonSchema.CodeGeneration.dll",
+        "lib/netstandard1.3/NJsonSchema.CodeGeneration.xml",
+        "njsonschema.codegeneration.9.4.2.nupkg.sha512",
+        "njsonschema.codegeneration.nuspec"
+      ]
+    },
+    "NJsonSchema.CodeGeneration.CSharp/9.4.2": {
+      "sha512": "SNCkpxOCDabiboJPxag62vXdYUU23yq9916tS5IlSjUWcVKhaedvcELGJvLq01ILxwFxBOZ9G5Vsd2TCymnFVQ==",
+      "type": "package",
+      "path": "njsonschema.codegeneration.csharp/9.4.2",
+      "files": [
+        "lib/net451/NJsonSchema.CodeGeneration.CSharp.dll",
+        "lib/net451/NJsonSchema.CodeGeneration.CSharp.xml",
+        "lib/netstandard1.3/NJsonSchema.CodeGeneration.CSharp.dll",
+        "lib/netstandard1.3/NJsonSchema.CodeGeneration.CSharp.xml",
+        "njsonschema.codegeneration.csharp.9.4.2.nupkg.sha512",
+        "njsonschema.codegeneration.csharp.nuspec"
+      ]
+    },
+    "NSwag.CodeGeneration/11.3.3": {
+      "sha512": "Mf07SDfpKN8FrZtuYsPBIywmBGqTcLX2g/WugHg7jgOMgPwDjdfqAzuAYmYz5da6PCOFnsmnqYvvd6ENXX1hug==",
+      "type": "package",
+      "path": "nswag.codegeneration/11.3.3",
+      "files": [
+        "lib/net451/NSwag.CodeGeneration.dll",
+        "lib/net451/NSwag.CodeGeneration.xml",
+        "lib/netstandard1.3/NSwag.CodeGeneration.dll",
+        "lib/netstandard1.3/NSwag.CodeGeneration.xml",
+        "nswag.codegeneration.11.3.3.nupkg.sha512",
+        "nswag.codegeneration.nuspec"
+      ]
+    },
+    "NSwag.CodeGeneration.CSharp/11.3.3": {
+      "sha512": "2rP4t5UTajdB1zuU2Jm4QtJUHc4tBB/mFwFlVfuyYtm4btY7y+f1QkfQwZmmgPo1JzNBN8/BF9Ip5+nHSdFcow==",
+      "type": "package",
+      "path": "nswag.codegeneration.csharp/11.3.3",
+      "files": [
+        "lib/net451/NSwag.CodeGeneration.CSharp.dll",
+        "lib/net451/NSwag.CodeGeneration.CSharp.xml",
+        "lib/netstandard1.3/NSwag.CodeGeneration.CSharp.dll",
+        "lib/netstandard1.3/NSwag.CodeGeneration.CSharp.xml",
+        "nswag.codegeneration.csharp.11.3.3.nupkg.sha512",
+        "nswag.codegeneration.csharp.nuspec"
+      ]
+    },
+    "NSwag.Core/11.3.3": {
+      "sha512": "gn+I2LsCPb8P8lnA0/bawxeM/0IcMjbEj/KAf8kXSXmVh1zr2fOMcMYvoFyxk7xUGYM9tYvzvTpBdVqZ9R0sJg==",
+      "type": "package",
+      "path": "nswag.core/11.3.3",
+      "files": [
+        "lib/net45/NSwag.Core.dll",
+        "lib/net45/NSwag.Core.xml",
+        "lib/netstandard1.0/NSwag.Core.dll",
+        "lib/netstandard1.0/NSwag.Core.xml",
+        "nswag.core.11.3.3.nupkg.sha512",
+        "nswag.core.nuspec"
       ]
     },
     "Remotion.Linq/2.1.1": {
@@ -9654,6 +9821,8 @@
       "Microsoft.AspNetCore.Mvc >= 1.1.3",
       "Microsoft.EntityFrameworkCore.SqlServer >= 1.1.2",
       "Microsoft.NETCore.App >= 1.1.2",
+      "NSwag.CodeGeneration.CSharp >= 11.3.3",
+      "NSwag.Core >= 11.3.3",
       "Newtonsoft.Json >= 10.0.3",
       "System.Runtime.Loader >= 4.3.0",
       "YamlDotNet >= 4.2.1"
@@ -9686,6 +9855,10 @@
             "target": "Package",
             "version": "4.3.0"
           },
+          "NSwag.CodeGeneration.CSharp": {
+            "target": "Package",
+            "version": "11.3.3"
+          },
           "Microsoft.NETCore.App": {
             "target": "Package",
             "version": "1.1.2",
@@ -9702,6 +9875,10 @@
           "Microsoft.AspNetCore.Mvc": {
             "target": "Package",
             "version": "1.1.3"
+          },
+          "NSwag.Core": {
+            "target": "Package",
+            "version": "11.3.3"
           },
           "Newtonsoft.Json": {
             "target": "Package",

@@ -13,7 +13,6 @@ namespace APICheck
 
         public Controller(Type controller)
         {
-
             BaseUrl = controller.GetTypeInfo()
                 .CustomAttributes.FirstOrDefault().ConstructorArguments.FirstOrDefault().Value?.ToString();
 
@@ -21,7 +20,9 @@ namespace APICheck
                 .GetMethods(BindingFlags.Instance | BindingFlags.DeclaredOnly | BindingFlags.Public) //Instance: is instance method, DeclaredOnly: No inherited methods, Public: is public method
                 .Where(m => !m.GetCustomAttributes(typeof(System.Runtime.CompilerServices.CompilerGeneratedAttribute),true).Any()) //Filter ones with compiler-generated elements
                 .ToList();
-
+            var action = actions[0];
+            var p = action.GetParameters();
+            var t = p.FirstOrDefault()?.GetType();
             Actions = actions.Select(a => new Action(a, BaseUrl)).ToList();
         }
     }

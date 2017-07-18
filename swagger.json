@@ -1,22 +1,29 @@
 ﻿{
   "swagger": "2.0",
   "info": {
-    "description": "A federated User Identity server.",
-    "title": "Ganesh Identity",
+    "description": "A federated User Permissions server.",
+    "title": "Ganesh Permissions",
     "version": "1.0.0"
   },
   "host": "api.otss.admin.nyu.edu",
-  "basePath": "/ganesh/identity/v1",
+  "basePath": "/ganesh/permissions/v1",
   "schemes": [
     "https"
   ],
   "produces": [
     "application/json"
   ],
+  "securityDefinitions": {
+    "ganesh": {
+      "type": "apiKey",
+      "in": "header",
+      "name": "Authorization"
+    }
+  },
   "paths": {
     "/": {
       "get": {
-        "operationId": "root",
+        "operationId": "getRoot",
         "summary": "Show the API version number",
         "responses": {
           "200": {
@@ -35,147 +42,564 @@
         }
       }
     },
-    "/users": {
+    "/applications": {
       "get": {
-        "operationId": "getAllUsers",
-        "summary": "Retrieve all users",
-        "description": "Get a list of known users from all sources.",
-        "parameters": [
+        "operationId": "getApplications",
+        "summary": "Get all applications",
+        "security": [
           {
-            "name": "id",
-            "in": "query",
-            "description": "Filter the list of users by the user ID as a partial match.",
-            "type": "string"
-          },
-          {
-            "name": "from",
-            "in": "query",
-            "description": "Return only users after the given index",
-            "default": 0,
-            "type": "number"
-          },
-          {
-            "name": "limit",
-            "in": "query",
-            "description": "Return only the given number of users",
-            "default": 20,
-            "type": "number"
+            "ganesh": []
           }
         ],
         "responses": {
           "200": {
-            "description": "A paginated list of known users.",
+            "description": "The requested applications",
             "schema": {
               "type": "array",
               "items": {
-                "$ref": "#/definitions/User"
+                "$ref": "#/definitions/Application"
               }
             }
           }
         }
       }
     },
-    "/users/{id}": {
+    "/applications/{systemName}": {
       "get": {
-        "operationId": "getSingleUser",
-        "summary": "Retrieve a single user",
-        "description": "Get a single user by ID.",
+        "operationId": "getApplication",
+        "summary": "Get a single application",
+        "security": [
+          {
+            "ganesh": []
+          }
+        ],
         "parameters": [
           {
-            "name": "id",
+            "name": "systemName",
             "in": "path",
-            "description": "The ID of the user.",
-            "type": "string",
-            "required": true
+            "required": true,
+            "description": "The system name of the application being requested",
+            "type": "string"
           }
         ],
         "responses": {
           "200": {
-            "description": "The requested user.",
+            "description": "The requested application",
             "schema": {
-              "$ref": "#/definitions/User"
+              "$ref": "#/definitions/Application"
             }
           },
           "404": {
-            "description": "No user was found with the given ID."
+            "description": "No application exists with the given system name"
+          }
+        }
+      },
+      "put": {
+        "operationId": "upsertApplication",
+        "summary": "Add or update a single application",
+        "security": [
+          {
+            "ganesh": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "systemName",
+            "in": "path",
+            "required": true,
+            "description": "The system name of the applicaiton being added or updated",
+            "type": "string"
+          },
+          {
+            "name": "application",
+            "in": "body",
+            "required": true,
+            "description": "The application, along with any roles, that will be created or updated",
+            "schema": {
+              "$ref": "#/definitions/Application"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The application was updated successfully",
+            "schema": {
+              "$ref": "#/definitions/Application"
+            }
+          },
+          "201": {
+            "description": "The application was created successfully",
+            "schema": {
+              "$ref": "#/definitions/Application"
+            }
+          },
+          "400": {
+            "description": "The application provided was not valid"
+          },
+          "404": {
+            "description": "No application exists with the given system name"
           }
         }
       }
     },
-    "/users/{id}/token": {
+    "/applications/{systemName}/roles": {
+      "get": {
+        "operationId": "getAppRoles",
+        "summary": "Get a single application's roles",
+        "security": [
+          {
+            "ganesh": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "systemName",
+            "in": "path",
+            "required": true,
+            "description": "The system name of the application whose roles are being requested",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The requested application's roles",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Role"
+              }
+            }
+          },
+          "404": {
+            "description": "No application exists with the given system name"
+          }
+        }
+      },
+      "put": {
+        "operationId": "upsertAppRoles",
+        "summary": "Add or update a single application's roles",
+        "security": [
+          {
+            "ganesh": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "systemName",
+            "in": "path",
+            "required": true,
+            "description": "The system name of the applicaiton being added or updated",
+            "type": "string"
+          },
+          {
+            "name": "roles",
+            "in": "body",
+            "required": true,
+            "description": "The application, along with any roles, that will be created or updated",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Role"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "The roles were created successfully"
+          },
+          "204": {
+            "description": "The roles were updated successfully"
+          },
+          "400": {
+            "description": "The roles provided were not valid"
+          },
+          "404": {
+            "description": "No application exists with the given system name"
+          }
+        }
+      }
+    },
+    "/rolefamilies": {
+      "get": {
+        "operationId": "getRoleFamilies",
+        "summary": "Get all role families",
+        "security": [
+          {
+            "ganesh": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The requested families",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/RoleFamily"
+              }
+            }
+          }
+        }
+      },
       "post": {
-        "operationId": "userToken",
-        "summary": "Create a JWT authentication token",
-        "description": "Validate the username and password given, and if they are correct, return a JWT that the user can use to prove their identity to other services that trust this identity server.",
-        "consumes": [
-          "application/x-www-form-url-encoded",
-          "application/json"
+        "operationId": "createRoleFamily",
+        "summary": "Add a new role family",
+        "security": [
+          {
+            "ganesh": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "roleFamily",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/RoleFamily"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "The role family was created successfully",
+            "schema": {
+              "$ref": "#/definitions/RoleFamily"
+            }
+          },
+          "400": {
+            "description": "The role family provided was not valid"
+          }
+        }
+      }
+    },
+    "/roleFamilies/{id}": {
+      "get": {
+        "operationId": "getRoleFamily",
+        "summary": "Get a single role family",
+        "security": [
+          {
+            "ganesh": []
+          }
         ],
         "parameters": [
           {
             "name": "id",
             "in": "path",
-            "description": "The ID of the user.",
             "required": true,
-            "type": "string"
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The requested role family",
+            "schema": {
+              "$ref": "#/definitions/RoleFamily"
+            }
+          }
+        }
+      },
+      "put": {
+        "operationId": "updateRoleFamily",
+        "summary": "Update a role family",
+        "security": [
+          {
+            "ganesh": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer"
           },
           {
-            "name": "password",
+            "name": "roleFamily",
             "in": "body",
-            "description": "The user's password for identity verification.",
             "required": true,
             "schema": {
-              "type": "string"
+              "$ref": "#/definitions/RoleFamily"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "The user identity and password are correct and have been verified, and a new JWT has been created for the user.",
+            "description": "The role family was updated successfully",
             "schema": {
-              "$ref": "#/definitions/Token"
+              "$ref": "#/definitions/RoleFamily"
+            }
+          }
+        }
+      }
+    },
+    "/roleAssignments/{userId}": {
+      "get": {
+        "operationId": "getUserAssignments",
+        "summary": "Get the role assignments for a user",
+        "security": [
+          {
+            "ganesh": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "description": "The ID of the user whose role assignments are requested",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The role assigments for a given user",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/RoleAssignment"
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "addUserAssignment",
+        "summary": "Assign a role to the user",
+        "security": [
+          {
+            "ganesh": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "description": "The ID of the user",
+            "type": "string"
+          },
+          {
+            "name": "role",
+            "in": "body",
+            "required": true,
+            "description": "The role to assign the user",
+            "schema": {
+              "$ref": "#/definitions/Role"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "The role was assigned to the user",
+            "schema": {
+              "$ref": "#/definitions/RoleAssignment"
+            }
+          },
+          "400": {
+            "description": "The role provided was not valid"
+          }
+        }
+      }
+    },
+    "/roleAssignments/{userId}/{id}": {
+      "delete": {
+        "operationId": "removeAssignment",
+        "summary": "Remove the role assignment",
+        "security": [
+          {
+            "ganesh": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "description": "The ID of the user",
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "The ID of the role assignment to be deleted",
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The role assignment was deleted"
+          },
+          "404": {
+            "description": "The role assignment does not exist for the given user or ID"
+          }
+        }
+      }
+    },
+    "/_myroles": {
+      "get": {
+        "operationId": "getMyRoles",
+        "summary": "Get roles for the current user",
+        "security": [
+          {
+            "ganesh": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "All roles assigned to the current user",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Role"
+              }
             }
           },
           "401": {
-            "description": "The user identity and/or the password provided are incorrect."
+            "description": "No authorized user is currently logged in"
+          }
+        }
+      }
+    },
+    "/_myroles/{application}": {
+      "get": {
+        "operationId": "getMyAppRoles",
+        "summary": "Get roles by application for the current user",
+        "security": [
+          {
+            "ganesh": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "application",
+            "in": "path",
+            "required": true,
+            "description": "The system name of the applicaiton being added or updated",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Roles assigned to the current user in the given application",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Role"
+              }
+            }
+          },
+          "401": {
+            "description": "No authorized user is currently logged in"
           }
         }
       }
     }
   },
   "definitions": {
-    "User": {
+    "Application": {
       "type": "object",
+      "description": "Represents an application or service that manages its user role assignments through Permissions",
+      "required": [
+        "systemName",
+        "name"
+      ],
       "properties": {
-        "id": {
-          "type": "string"
+        "systemName": {
+          "type": "string",
+          "description": "A unique alphanumeric identifier for the Application"
         },
         "name": {
-          "type": "string"
-        },
-        "givenName": {
-          "type": "string"
-        },
-        "familyName": {
-          "type": "string"
-        },
-        "emailAddress": {
           "type": "string",
-          "format": "email"
+          "description": "A human-readable name for the Application"
+        },
+        "description": {
+          "type": "string",
+          "description": "A description of the Application"
         }
       }
     },
-    "Token": {
+    "Role": {
       "type": "object",
+      "description": "Represents a user role in a given system",
+      "required": [
+        "systemName",
+        "application",
+        "name"
+      ],
       "properties": {
-        "token": {
+        "systemName": {
           "type": "string",
-          "format": "jwt",
-          "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiSmFuZSBEb2UiLCJ0ZXN0Ijp0cnVlfQ.f-gcs0eNMFWdk11GV2yJa-JelIftijZCcAZGdeWYslE"
+          "description": "A unique alphanumeric identifier for the Role"
         },
-        "expiry": {
+        "application": {
           "type": "string",
-          "format": "date-time"
+          "description": "The system name of the application associated with the Role"
+        },
+        "name": {
+          "type": "string",
+          "description": "A human-readable name for the Role"
+        },
+        "description": {
+          "type": "string",
+          "description": "A description of the Role"
+        }
+      }
+    },
+    "RoleFamily": {
+      "type": "object",
+      "description": "Provides users of Permissions a means to group similar Roles, or Roles often assigned together",
+      "required": [
+        "name",
+        "roles"
+      ],
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int32",
+          "description": "The database identifier of the Role Family"
+        },
+        "name": {
+          "type": "string",
+          "description": "The name of the Role Family"
+        },
+        "description": {
+          "type": "string",
+          "description": "A description of the Role Family"
+        },
+        "roles": {
+          "type": "array",
+          "description": "The Roles associated with the Role Family",
+          "items": {
+            "$ref": "#/definitions/Role"
+          }
+        }
+      }
+    },
+    "RoleAssignment": {
+      "type": "object",
+      "description": "Represents the assignment of a specific Role to a user",
+      "required": [
+        "userId",
+        "role"
+      ],
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int32",
+          "description": "The database identifier of the role assignment"
+        },
+        "role": {
+          "$ref": "#/definitions/Role"
+        },
+        "roleFamily": {
+          "type": "string",
+          "description": "The name of the role family that was used to assign this role to the user."
+        },
+        "userId": {
+          "type": "string",
+          "description": "The user to which the Role is assigned"
         }
       }
     }
