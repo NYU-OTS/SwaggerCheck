@@ -25,7 +25,7 @@ namespace APICheck
             var json = File.ReadAllText(swaggerPath);
             var document = SwaggerDocument.FromFileAsync(swaggerPath).Result;
 
-            var Actions = document.Paths.SelectMany(path => path.Value.Select(m => new Action(path.Key, m))).ToList();
+            Actions = document.Operations.Select(operationDescription =>  new Action(operationDescription));
         }
         
     }

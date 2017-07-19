@@ -13,7 +13,7 @@ namespace APICheck
         {
             //Console.WriteLine("Enter relative path to compiled .dll file");
             //var path = Console.ReadLine();
-            var specs = new Swagger();
+            //var specs = new Swagger();
 
             var assemblyPath =
                 @"C:\Users\bt1124\Permissions\Permissions\bin\Debug\netcoreapp1.1\OTSS.Ganesh.Permissions.dll";
@@ -29,16 +29,17 @@ namespace APICheck
 
             var existingActions = controllers.SelectMany(c => c.Actions).ToList();
 
-            //var specs = new Swagger();
-            //var swaggerActions = specs.Actions.ToList();
+            var specs = new Swagger();
+            var swaggerActions = specs.Actions.ToList();
             //swaggerActions.Add(new Action("/route", "GET"));
-            //Console.WriteLine(Same(swaggerActions, existingActions));
+            var diff = Same(swaggerActions, existingActions);
+            Console.WriteLine(Same(swaggerActions, existingActions).ToArray());
         }
 
-        static bool Same(IEnumerable<Action> swaggerActions, IEnumerable<Action> existingActions)
+        static IEnumerable<Action> Same(IEnumerable<Action> swaggerActions, IEnumerable<Action> existingActions)
         {
             //Linear search in low amounts can be faster than dictionary lookup
-            return !swaggerActions.Except(existingActions, new ActionComparer()).Any();
+            return swaggerActions.Except(existingActions, new ActionComparer());
         }
     }
 }

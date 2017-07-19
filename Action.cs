@@ -5,6 +5,8 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.Loader;
 using Microsoft.AspNetCore.Mvc.Routing;
+using Microsoft.AspNetCore.Routing;
+using Microsoft.Extensions.Primitives;
 using Newtonsoft.Json.Linq;
 using NSwag;
 
@@ -15,7 +17,7 @@ namespace APICheck
         //public Type Controller;
         public HashSet<string> Httpmethods { get; set; }
         public string Route { get; set; }
-        public IEnumerable<string> param { get; set; }
+        public IDictionary<string, string> simpleParams { get; set; } = new Dictionary<string, string>();
 
         //for testing
         public Action(string route, params string[] httpMethods)
@@ -23,6 +25,19 @@ namespace APICheck
             Route = route;
             Httpmethods = new HashSet<string>(httpMethods);
         }
+
+        #region User property <-> LDAP attribute mapping
+
+        private static readonly Dictionary<string, string> Mapping = new Dictionary<string, string>(
+            StringComparer.OrdinalIgnoreCase)
+        {
+            { typeof(string).ToString(), "string" },
+            { typeof(float).ToString(), "number" },
+            { typeof(int).ToString(), "integer" },
+            { typeof(bool).ToString(), "bool" },
+        };
+
+        #endregion
 
         //From binary
         public Action(MethodInfo action, string baseurl)
@@ -32,26 +47,57 @@ namespace APICheck
 
             Route = url.Trim('/');
             Httpmethods = new HashSet<string>(attribute.HttpMethods);
-            var paramTypes = action.GetParameters().Select(p => p.ParameterType);
+            var ps = action.GetParameters();
+
+            String alias;
+            foreach (var p in ps)
+            {
+                var t = p.ParameterType;
+                if(Mapping.TryGetValue(p.ParameterType.ToString(), out alias))
+                    simpleParams.Add(p.Name, alias);
+            }
         }
 
         //From Swagger
-        public Action(string path, KeyValuePair<SwaggerOperationMethod, SwaggerOperation> action)
+        public Action(SwaggerOperationDescription action)
         {
-            Route = path;
+            Route = action.Path.Trim('/');
             Httpmethods = new HashSet<string>();
-            Httpmethods.Add(action.Key.ToString());
-            var paramList =  action.Value.ActualParameters.Select(ps => ps.ActualSchema.ActualProperties);
-            var p1 = paramList.Select(p => p.Values.Select(m => m.Type));
+            Httpmethods.Add(action.Method.ToString().ToUpper());
+
+            //params
+            //var paramList =  action.Operation.ActualParameters.Select(ps => ps.ActualSchema.ActualProperties);
+            var ps = action.Operation.ActualParameters;
+
+            foreach (var p in ps)
+            {
+                simpleParams.Add(p.Name, p.Type.ToString());
+            }
+            //var types = action.Operation.ActualParameters.Select(ps => ps.Type);
         }
-        
-      
+
         public override bool Equals(object obj)
         {
-            Action a  = obj as Action;
-            if (a == null) return false;
-            return Route == a.Route && Httpmethods.SetEquals(a.Httpmethods);
+            Action other  = obj as Action;
+            if (other == null) return false;
+            foreach (var varName in other.simpleParams.Keys)
+            {
+                if (other.simpleParams[varName] != simpleParams[varName])
+                    return false;
+            }
+            return Route == other.Route && Httpmethods.SetEquals(other.Httpmethods);
         }
-        
+
+        public override string ToString()
+        {
+            var route = "Routes: " + Route;
+            var httpMethods = "HttpMethods:";
+            foreach (var method in Httpmethods)
+            {
+                httpMethods += " " + method;
+            }
+            var parameters = simpleParams.ToString();
+            return route + httpMethods + parameters;
+        }
     }
 }
