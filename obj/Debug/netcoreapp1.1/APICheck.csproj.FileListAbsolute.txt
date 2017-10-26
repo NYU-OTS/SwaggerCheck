@@ -7,3 +7,5 @@ c:\users\bt1124\documents\visual studio 2017\Projects\APICheck\obj\Debug\netcore
 C:\Users\bt1124\Documents\Visual Studio 2017\Projects\APICheck\bin\Debug\netcoreapp1.1\APICheck.pdb
 C:\Users\bt1124\Documents\Visual Studio 2017\Projects\APICheck\obj\Debug\netcoreapp1.1\APICheck.dll
 C:\Users\bt1124\Documents\Visual Studio 2017\Projects\APICheck\obj\Debug\netcoreapp1.1\APICheck.pdb
+C:\Users\bt1124\Documents\Visual Studio 2017\Projects\APICheck\obj\Debug\netcoreapp1.1\APICheck.csproj.CoreCompileInputs.cache
+C:\Users\bt1124\Documents\Visual Studio 2017\Projects\APICheck\obj\Debug\netcoreapp1.1\APICheck.AssemblyInfoInputs.cache

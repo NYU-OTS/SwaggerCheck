@@ -1,607 +1,288 @@
 ﻿{
-  "swagger": "2.0",
-  "info": {
-    "description": "A federated User Permissions server.",
-    "title": "Ganesh Permissions",
-    "version": "1.0.0"
-  },
-  "host": "api.otss.admin.nyu.edu",
-  "basePath": "/ganesh/permissions/v1",
-  "schemes": [
-    "https"
-  ],
-  "produces": [
-    "application/json"
-  ],
-  "securityDefinitions": {
-    "ganesh": {
-      "type": "apiKey",
-      "in": "header",
-      "name": "Authorization"
-    }
-  },
-  "paths": {
-    "/": {
-      "get": {
-        "operationId": "getRoot",
-        "summary": "Show the API version number",
-        "responses": {
-          "200": {
-            "description": "The API version number",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "version": {
-                  "type": "string",
-                  "format": "version",
-                  "example": "1.0.0"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/applications": {
-      "get": {
-        "operationId": "getApplications",
-        "summary": "Get all applications",
-        "security": [
-          {
-            "ganesh": []
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "The requested applications",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/Application"
-              }
-            }
-          }
-        }
-      }
-    },
-    "/applications/{systemName}": {
-      "get": {
-        "operationId": "getApplication",
-        "summary": "Get a single application",
-        "security": [
-          {
-            "ganesh": []
-          }
-        ],
-        "parameters": [
-          {
-            "name": "systemName",
-            "in": "path",
-            "required": true,
-            "description": "The system name of the application being requested",
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "The requested application",
-            "schema": {
-              "$ref": "#/definitions/Application"
-            }
-          },
-          "404": {
-            "description": "No application exists with the given system name"
-          }
-        }
-      },
-      "put": {
-        "operationId": "upsertApplication",
-        "summary": "Add or update a single application",
-        "security": [
-          {
-            "ganesh": []
-          }
-        ],
-        "parameters": [
-          {
-            "name": "systemName",
-            "in": "path",
-            "required": true,
-            "description": "The system name of the applicaiton being added or updated",
-            "type": "string"
-          },
-          {
-            "name": "application",
-            "in": "body",
-            "required": true,
-            "description": "The application, along with any roles, that will be created or updated",
-            "schema": {
-              "$ref": "#/definitions/Application"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "The application was updated successfully",
-            "schema": {
-              "$ref": "#/definitions/Application"
-            }
-          },
-          "201": {
-            "description": "The application was created successfully",
-            "schema": {
-              "$ref": "#/definitions/Application"
-            }
-          },
-          "400": {
-            "description": "The application provided was not valid"
-          },
-          "404": {
-            "description": "No application exists with the given system name"
-          }
-        }
-      }
-    },
-    "/applications/{systemName}/roles": {
-      "get": {
-        "operationId": "getAppRoles",
-        "summary": "Get a single application's roles",
-        "security": [
-          {
-            "ganesh": []
-          }
-        ],
-        "parameters": [
-          {
-            "name": "systemName",
-            "in": "path",
-            "required": true,
-            "description": "The system name of the application whose roles are being requested",
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "The requested application's roles",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/Role"
-              }
-            }
-          },
-          "404": {
-            "description": "No application exists with the given system name"
-          }
-        }
-      },
-      "put": {
-        "operationId": "upsertAppRoles",
-        "summary": "Add or update a single application's roles",
-        "security": [
-          {
-            "ganesh": []
-          }
-        ],
-        "parameters": [
-          {
-            "name": "systemName",
-            "in": "path",
-            "required": true,
-            "description": "The system name of the applicaiton being added or updated",
-            "type": "string"
-          },
-          {
-            "name": "roles",
-            "in": "body",
-            "required": true,
-            "description": "The application, along with any roles, that will be created or updated",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/Role"
-              }
-            }
-          }
-        ],
-        "responses": {
-          "201": {
-            "description": "The roles were created successfully"
-          },
-          "204": {
-            "description": "The roles were updated successfully"
-          },
-          "400": {
-            "description": "The roles provided were not valid"
-          },
-          "404": {
-            "description": "No application exists with the given system name"
-          }
-        }
-      }
-    },
-    "/rolefamilies": {
-      "get": {
-        "operationId": "getRoleFamilies",
-        "summary": "Get all role families",
-        "security": [
-          {
-            "ganesh": []
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "The requested families",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/RoleFamily"
-              }
-            }
-          }
-        }
-      },
-      "post": {
-        "operationId": "createRoleFamily",
-        "summary": "Add a new role family",
-        "security": [
-          {
-            "ganesh": []
-          }
-        ],
-        "parameters": [
-          {
-            "name": "roleFamily",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/RoleFamily"
-            }
-          }
-        ],
-        "responses": {
-          "201": {
-            "description": "The role family was created successfully",
-            "schema": {
-              "$ref": "#/definitions/RoleFamily"
-            }
-          },
-          "400": {
-            "description": "The role family provided was not valid"
-          }
-        }
-      }
-    },
-    "/roleFamilies/{id}": {
-      "get": {
-        "operationId": "getRoleFamily",
-        "summary": "Get a single role family",
-        "security": [
-          {
-            "ganesh": []
-          }
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "type": "integer"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "The requested role family",
-            "schema": {
-              "$ref": "#/definitions/RoleFamily"
-            }
-          }
-        }
-      },
-      "put": {
-        "operationId": "updateRoleFamily",
-        "summary": "Update a role family",
-        "security": [
-          {
-            "ganesh": []
-          }
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "type": "integer"
-          },
-          {
-            "name": "roleFamily",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/RoleFamily"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "The role family was updated successfully",
-            "schema": {
-              "$ref": "#/definitions/RoleFamily"
-            }
-          }
-        }
-      }
-    },
-    "/roleAssignments/{userId}": {
-      "get": {
-        "operationId": "getUserAssignments",
-        "summary": "Get the role assignments for a user",
-        "security": [
-          {
-            "ganesh": []
-          }
-        ],
-        "parameters": [
-          {
-            "name": "userId",
-            "in": "path",
-            "required": true,
-            "description": "The ID of the user whose role assignments are requested",
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "The role assigments for a given user",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/RoleAssignment"
-              }
-            }
-          }
-        }
-      },
-      "post": {
-        "operationId": "addUserAssignment",
-        "summary": "Assign a role to the user",
-        "security": [
-          {
-            "ganesh": []
-          }
-        ],
-        "parameters": [
-          {
-            "name": "userId",
-            "in": "path",
-            "required": true,
-            "description": "The ID of the user",
-            "type": "string"
-          },
-          {
-            "name": "role",
-            "in": "body",
-            "required": true,
-            "description": "The role to assign the user",
-            "schema": {
-              "$ref": "#/definitions/Role"
-            }
-          }
-        ],
-        "responses": {
-          "201": {
-            "description": "The role was assigned to the user",
-            "schema": {
-              "$ref": "#/definitions/RoleAssignment"
-            }
-          },
-          "400": {
-            "description": "The role provided was not valid"
-          }
-        }
-      }
-    },
-    "/roleAssignments/{userId}/{id}": {
-      "delete": {
-        "operationId": "removeAssignment",
-        "summary": "Remove the role assignment",
-        "security": [
-          {
-            "ganesh": []
-          }
-        ],
-        "parameters": [
-          {
-            "name": "userId",
-            "in": "path",
-            "required": true,
-            "description": "The ID of the user",
-            "type": "string"
-          },
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "description": "The ID of the role assignment to be deleted",
-            "type": "integer",
-            "format": "int32"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "The role assignment was deleted"
-          },
-          "404": {
-            "description": "The role assignment does not exist for the given user or ID"
-          }
-        }
-      }
-    },
-    "/_myroles": {
-      "get": {
-        "operationId": "getMyRoles",
-        "summary": "Get roles for the current user",
-        "security": [
-          {
-            "ganesh": []
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "All roles assigned to the current user",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/Role"
-              }
-            }
-          },
-          "401": {
-            "description": "No authorized user is currently logged in"
-          }
-        }
-      }
-    },
-    "/_myroles/{application}": {
-      "get": {
-        "operationId": "getMyAppRoles",
-        "summary": "Get roles by application for the current user",
-        "security": [
-          {
-            "ganesh": []
-          }
-        ],
-        "parameters": [
-          {
-            "name": "application",
-            "in": "path",
-            "required": true,
-            "description": "The system name of the applicaiton being added or updated",
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Roles assigned to the current user in the given application",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/Role"
-              }
-            }
-          },
-          "401": {
-            "description": "No authorized user is currently logged in"
-          }
-        }
-      }
-    }
-  },
-  "definitions": {
-    "Application": {
-      "type": "object",
-      "description": "Represents an application or service that manages its user role assignments through Permissions",
-      "required": [
-        "systemName",
-        "name"
-      ],
-      "properties": {
-        "systemName": {
-          "type": "string",
-          "description": "A unique alphanumeric identifier for the Application"
-        },
-        "name": {
-          "type": "string",
-          "description": "A human-readable name for the Application"
-        },
-        "description": {
-          "type": "string",
-          "description": "A description of the Application"
-        }
-      }
-    },
-    "Role": {
-      "type": "object",
-      "description": "Represents a user role in a given system",
-      "required": [
-        "systemName",
-        "application",
-        "name"
-      ],
-      "properties": {
-        "systemName": {
-          "type": "string",
-          "description": "A unique alphanumeric identifier for the Role"
-        },
-        "application": {
-          "type": "string",
-          "description": "The system name of the application associated with the Role"
-        },
-        "name": {
-          "type": "string",
-          "description": "A human-readable name for the Role"
-        },
-        "description": {
-          "type": "string",
-          "description": "A description of the Role"
-        }
-      }
-    },
-    "RoleFamily": {
-      "type": "object",
-      "description": "Provides users of Permissions a means to group similar Roles, or Roles often assigned together",
-      "required": [
-        "name",
-        "roles"
-      ],
-      "properties": {
-        "id": {
-          "type": "integer",
-          "format": "int32",
-          "description": "The database identifier of the Role Family"
-        },
-        "name": {
-          "type": "string",
-          "description": "The name of the Role Family"
-        },
-        "description": {
-          "type": "string",
-          "description": "A description of the Role Family"
-        },
-        "roles": {
-          "type": "array",
-          "description": "The Roles associated with the Role Family",
-          "items": {
-            "$ref": "#/definitions/Role"
-          }
-        }
-      }
-    },
-    "RoleAssignment": {
-      "type": "object",
-      "description": "Represents the assignment of a specific Role to a user",
-      "required": [
-        "userId",
-        "role"
-      ],
-      "properties": {
-        "id": {
-          "type": "integer",
-          "format": "int32",
-          "description": "The database identifier of the role assignment"
-        },
-        "role": {
-          "$ref": "#/definitions/Role"
-        },
-        "roleFamily": {
-          "type": "string",
-          "description": "The name of the role family that was used to assign this role to the user."
-        },
-        "userId": {
-          "type": "string",
-          "description": "The user to which the Role is assigned"
-        }
-      }
-    }
-  }
+	"swagger": "2.0",
+	"info": {
+		"title": "TFS Automation with Slack Tool Integration and Others (TASTIO)",
+		"description": "TFSbot",
+		"version": "1.0.0"
+	},
+	"host": "localhost",
+	"paths": {
+		"/Slack/Channels": {
+			"get": {
+				"summary": "Get all Slack channels",
+				"description": "Retrieves a list of registered Slack channels",
+				"produces": [
+					"application/json"
+				],
+				"responses": {
+					"200": {
+						"description": "A collection of Slack channels",
+						"schema": {
+							"type": "array",
+							"items": {
+								"type": "string"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/TFS/ProjectInfo": {
+			"get": {
+				"summary": "Get information for all projects",
+				"description": "Retrieves information on all registered projects",
+				"produces": [
+					"application/json"
+				],
+				"responses": {
+					"200": {
+						"description": "A collection of ProjectInfo objects",
+						"schema": {
+							"type": "array",
+							"items": {
+								"$ref": "#/definitions/ProjectInfo"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/TFS/Subscriptions": {
+			"post": {
+				"summary": "Register a project for subscriptions",
+				"description": "Adds the project to the list of registered projects and creates subscriptions for the project",
+				"consumes": [
+					"application/json"
+				],
+				"parameters": [
+					{
+						"name": "Project information",
+						"in": "body",
+						"description": "Information about the project",
+						"required": true,
+						"schema": {
+							"$ref": "#/definitions/ProjectInfo"
+						}
+					}
+				],
+				"responses": {
+					"201": {
+						"description": "Created"
+					},
+					"400": {
+						"description": "Invalid input"
+					},
+					"404": {
+						"description": "Project or channel doesn't exist"
+					}
+				}
+			}
+		},
+		"/TFS/Events/WorkItemUpdated": {
+			"post": {
+				"summary": "A work item has been updated",
+				"description": "Posts a message to Slack depending on the type of update",
+				"consumes": [
+					"application/json"
+				],
+				"parameters": [
+					{
+						"name": "Work Item",
+						"in": "body",
+						"description": "Information about the work item",
+						"required": true,
+						"schema": {
+							"$ref": "#/definitions/WorkItemHookModel"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK"
+					}
+				}
+			}
+		},
+		"/TFS/Events/PullRequestCreated": {
+			"post": {
+				"summary": "A pull request has been created",
+				"description": "Moves the corresponding work item to Review",
+				"consumes": [
+					"application/json"
+				],
+				"parameters": [
+					{
+						"name": "Pull Request",
+						"in": "body",
+						"description": "Information about the pull request",
+						"required": true,
+						"schema": {
+							"$ref": "#/definitions/PullRequestHookModel"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK"
+					}
+				}
+			}
+		},
+		"/TFS/Events/PullRequestUpdated": {
+			"post": {
+				"summary": "A pull request has been updated",
+				"description": "Changes the corresponding work item's state depending on the type of update",
+				"consumes": [
+					"application/json"
+				],
+				"parameters": [
+					{
+						"name": "Pull Request",
+						"in": "body",
+						"description": "Information about the pull request and event",
+						"required": true,
+						"schema": {
+							"$ref": "#/definitions/PullRequestHookModel"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK"
+					}
+				}
+			}
+		}
+	},
+	"definitions": {
+		"ProjectInfo": {
+			"type": "object",
+			"required": [
+				"ProjectName",
+				"SlackChannel",
+				"SlackUrl"
+			],
+			"properties": {
+				"ProjectName": {
+					"type": "string"
+				},
+				"SlackChannel": {
+					"type": "string"
+				},
+				"SlackUrl": {
+					"type": "string"
+				}
+			}
+		},
+		"WorkItemHookModel": {
+			"type": "object",
+			"properties": {
+				"Resource": {
+					"$ref": "#/definitions/WorkItemResource"
+				}
+			}
+		},
+		"RevisionFields": {
+			"type": "object",
+			"properties": {
+				"AssignedTo": {
+					"type": "string"
+				},
+				"ProjectName": {
+					"type": "string"
+				},
+				"State": {
+					"type": "string"
+				},
+				"Tags": {
+					"type": "string"
+				},
+				"Title": {
+					"type": "string"
+				}
+			}
+		},
+		"Revision": {
+			"type": "object",
+			"properties": {
+				"Fields": {
+					"$ref": "#/definitions/RevisionFields"
+				},
+				"Id": {
+					"type": "number"
+				}
+			}
+		},
+		"FieldAttribute": {
+			"type": "object",
+			"properties": {
+				"OldState": {
+					"type": "string"
+				},
+				"NewState": {
+					"type": "string"
+				}
+			}
+		},
+		"ResourceFields": {
+			"type": "object",
+			"properties": {
+				"AssignedTo": {
+					"$ref": "#/definitions/FieldAttribute"
+				},
+				"State": {
+					"$ref": "#/definitions/FieldAttribute"
+				}
+			}
+		},
+		"WorkItemResource": {
+			"type": "object",
+			"properties": {
+				"Fields": {
+					"$ref": "#/definitions/ResourceFields"
+				},
+				"Rev": {
+					"type": "number"
+				},
+				"RevisedBy": {
+					"type": "object",
+					"properties": {
+						"Name": {
+							"type": "string"
+						}
+					}
+				},
+				"Revision": {
+					"$ref": "#/definitions/Revision"
+				}
+			}
+		},
+		"PullRequestResource": {
+			"type": "object",
+			"properties": {
+				"Description": {
+					"type": "string"
+				},
+				"SourceRefName": {
+					"type": "string"
+				}
+			}
+		},
+		"PullRequestHookModel": {
+			"type": "object",
+			"properties": {
+				"Message": {
+					"type": "object",
+					"properties": {
+						"Text": {
+							"type": "string"
+						}
+					}
+				},
+				"Resource": {
+					"$ref": "#/definitions/PullRequestResource"
+				}
+			}
+		}
+	}
 }

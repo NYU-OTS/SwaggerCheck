@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.Loader;
+using NJsonSchema;
+using NJsonSchema.Generation;
+using NJsonSchema.Generation.TypeMappers;
 
 
 namespace APICheck
@@ -11,35 +14,32 @@ namespace APICheck
     {
         static void Main()
         {
-            //Console.WriteLine("Enter relative path to compiled .dll file");
-            //var path = Console.ReadLine();
-            //var specs = new Swagger();
+            /*
+            Console.WriteLine("Enter absolute path to compiled .dll file");
+            var assemblyPath = Console.ReadLine();
 
-            var assemblyPath =
-                @"C:\Users\bt1124\Permissions\Permissions\bin\Debug\netcoreapp1.1\OTSS.Ganesh.Permissions.dll";
+            Console.WriteLine("Enter absolute path to Swagger file");
+            var swaggerPath = Console.ReadLine();
+            */
 
-            var assembly = AssemblyLoadContext.Default.LoadFromAssemblyPath(assemblyPath);
+            var assemblyPath = @"C:\Users\bt1124\TASTIO\TASTIO\bin\Debug\netcoreapp1.1\OTSS.TASTIO.dll";
+            var swaggerPath = @"C:\Users\bt1124\Documents\Visual Studio 2017\Projects\APICheck\swagger.json";
 
-            //Type = controller
-            var controllers = assembly.GetTypes()
-                .Where(type => typeof(Microsoft.AspNetCore.Mvc.Controller)
-                    .IsAssignableFrom(type)) //Can instance of type be assigned to Controller? aka is controller?
-                .Where(type => type.GetTypeInfo().CustomAttributes.Any()) //Is it not the BaseController Class
-                .Select(type => new Controller(type));
+            var assembly = new Assembly(assemblyPath);
+            var existingActions = assembly.Actions.ToList();
 
-            var existingActions = controllers.SelectMany(c => c.Actions).ToList();
-
-            var specs = new Swagger();
+            var specs = new Swagger(swaggerPath);
             var swaggerActions = specs.Actions.ToList();
-            //swaggerActions.Add(new Action("/route", "GET"));
-            var diff = Same(swaggerActions, existingActions);
-            Console.WriteLine(Same(swaggerActions, existingActions).ToArray());
+
+            var inSwagger = Compare(swaggerActions, existingActions);
+            var inAssembly = Compare(existingActions, swaggerActions);
+            Console.WriteLine(inSwagger.Any());
         }
 
-        static IEnumerable<Action> Same(IEnumerable<Action> swaggerActions, IEnumerable<Action> existingActions)
+        static IEnumerable<Action> Compare(IEnumerable<Action> swaggerActions, IEnumerable<Action> existingActions)
         {
             //Linear search in low amounts can be faster than dictionary lookup
-            return swaggerActions.Except(existingActions, new ActionComparer());
+            return swaggerActions.Except(existingActions, new ActionComparer()).ToList();
         }
     }
 }
