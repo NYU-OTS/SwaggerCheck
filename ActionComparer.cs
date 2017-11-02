@@ -18,7 +18,7 @@ namespace APICheck
                 y.simpleParams.Keys.OrderBy(i => i));
 
             if (!kEqual || x.Route != y.Route || !x.Httpmethods.SetEquals(y.Httpmethods))
-                return false;
+                return false; //No output if not the same route+method
 
             foreach (var varName in x.simpleParams.Keys)
             {

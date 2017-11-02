@@ -16,13 +16,25 @@ namespace APICheck
 {
     class Swagger
     {
-        public IEnumerable<Action> Actions { get; set; }
+        public Dictionary<string, List<Action>> Routes = new Dictionary<string, List<Action>>();
 
         public Swagger(string swaggerPath)
         {
             var document = SwaggerDocument.FromFileAsync(swaggerPath).Result;
 
-            Actions = document.Operations.Select(operationDescription =>  new Action(operationDescription)).ToList();
+            document.Operations.ToList().ForEach(operationDescription =>
+            {
+                var path = operationDescription.Path.Trim('/').ToLower();
+                List<Action> methods;
+                if (Routes.TryGetValue(path, out methods))
+                {
+                    methods.Add(new Action(operationDescription));
+                }
+                else
+                {
+                    Routes.Add(path, new List<Action>(){new Action(operationDescription)});
+                }
+            });
         }
         
     }

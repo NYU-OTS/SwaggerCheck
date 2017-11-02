@@ -9,7 +9,7 @@ namespace APICheck
 {
     class Assembly
     {
-        public IEnumerable<Action> Actions { get; set; }
+        public Dictionary<string, List<Action>> Routes { get; set; }
         public Assembly(string assemblyPath)
         {
             var assembly = AssemblyLoadContext.Default.LoadFromAssemblyPath(assemblyPath);
@@ -19,7 +19,8 @@ namespace APICheck
                 .Where(type => type.GetTypeInfo().CustomAttributes.Any()) //Is it not the BaseController Class
                 .Select(type => new Controller(type));
 
-            Actions = controllers.SelectMany(c => c.Actions).ToList();
+            Routes = controllers.SelectMany(c => c.Routes)
+                    .ToDictionary(pair => pair.Key, pair => pair.Value);
         }
     }
 }

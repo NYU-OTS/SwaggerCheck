@@ -64,7 +64,6 @@ namespace APICheck
                 if (Mapping.TryGetValue(p.ParameterType.ToString(), out alias)) //fails for nullable ex. RoleAssignments have int? roleFamilyId
                 {
                     simpleParams.Add(p.Name.ToLower(), alias);
-                    
                 }
                 else if (Nullable.GetUnderlyingType(p.ParameterType) != null) //handles nullables
                 {
@@ -73,7 +72,7 @@ namespace APICheck
                     {
                         simpleParams.Add(p.Name.ToLower(), alias);
                     }
-                    else
+                    else //handles complex parameters
                     {
                         var schema = JsonSchema4.FromTypeAsync(Nullable.GetUnderlyingType(p.ParameterType)).Result;
                         complexParams.Add(p.Name.ToLower().Replace("model", ""), schema);
@@ -105,21 +104,9 @@ namespace APICheck
                 }
                 else
                 {
-                    complexParams.Add(p.Name.ToLower(),p.ActualSchema);
+                    complexParams.Add(p.Name.ToLower(), p.ActualSchema);
                 }
             }
-        }
-
-        public override string ToString()
-        {
-            var route = "Routes: " + Route;
-            var httpMethods = "HttpMethods:";
-            foreach (var method in Httpmethods)
-            {
-                httpMethods += " " + method;
-            }
-            var parameters = simpleParams.ToString();
-            return route + httpMethods + parameters;
         }
     }
 }
