@@ -7,7 +7,7 @@
     <Authors>NYU Operations Technology Services</Authors>
     <Company>NYU Operations Technology Services</Company>
     <Product>TestApi</Product>
-    <Description>An api to test the Swagger checker</Description>
+    <Description>An API to test SwaggerChecker</Description>
     <Copyright>Copyright © NYU Operations Technology Services. All rights Reserved</Copyright>
   </PropertyGroup>
   <ItemGroup>
