@@ -1,14 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
   <PropertyGroup>
     <TargetFramework>netcoreapp1.1</TargetFramework>
-    <RootNamespace>OTSS.TestApi</RootNamespace>
   </PropertyGroup>
   <PropertyGroup Label="Package">
     <Version>1.0.0</Version>
     <Authors>NYU Operations Technology Services</Authors>
     <Company>NYU Operations Technology Services</Company>
     <Product>TestApi</Product>
-    <Description>An Api to test the specification check tool</Description>
+    <Description>An api to test the Swagger checker</Description>
     <Copyright>Copyright © NYU Operations Technology Services. All rights Reserved</Copyright>
   </PropertyGroup>
   <ItemGroup>
