@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27004.2005
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "APICheck", "APICheck\APICheck.csproj", "{83B80D1E-B5AE-4A1C-AD78-594568E5F8FF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "APICheck", "SwaggerCheck\SwaggerCheck.csproj", "{83B80D1E-B5AE-4A1C-AD78-594568E5F8FF}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestApi", "TestApi\TestApi.csproj", "{6C82ADD1-CDEE-4310-995F-2C9EC3523B86}"
 EndProject
