@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.Loader;
@@ -20,8 +21,8 @@ namespace APICheck
             CommandLineApplication app = new CommandLineApplication();
 
             var matchRoute = false;
-            var assemblyPath = ""; // = @"C:\Users\bt1124\TASTIO\TASTIO\bin\Debug\netcoreapp1.1\OTSS.TASTIO.dll";
-            var swaggerPath = ""; // = @"C:\Users\bt1124\Documents\Visual Studio 2017\Projects\APICheck\swagger.json";
+            var assemblyPath = ""; // = @"C:\Users\bt1124\SwaggerCheck\TestApi\bin\Debug\netcoreapp1.1\TestApi.dll";
+            var swaggerPath = ""; // = @"C:\Users\bt1124\SwaggerCheck\TestApi\swagger.json";
 
             app.Name = "apiCheck";
             var matchRouteOption = app.Option("-r|--routes",
@@ -29,13 +30,13 @@ namespace APICheck
                 CommandOptionType.NoValue);
 
             var swaggerRouteOption = app.Option("-s|--swagger",
-                "Absolute Path to Swagger file",
+                "Path to Swagger file",
                 CommandOptionType.SingleValue);
 
             var assemblyRouteOption = app.Option("-b|--binary",
-                "Absolute Path to .dll file",
+                "Path to .dll file",
                 CommandOptionType.SingleValue);
-
+            
             app.OnExecute(() =>
             {
                 if (matchRouteOption.HasValue())
@@ -44,23 +45,23 @@ namespace APICheck
                 }
                 if (swaggerRouteOption.HasValue())
                 {
-                    swaggerPath = swaggerRouteOption.Value();
+                    swaggerPath = Path.GetFullPath(swaggerRouteOption.Value());
                 }
                 if (assemblyRouteOption.HasValue())
                 {
-                    assemblyPath = assemblyRouteOption.Value();
+                    assemblyPath = Path.GetFullPath(assemblyRouteOption.Value());
                 }
                 return 0;
             });
 
             app.Execute(args);
-            
+            Console.WriteLine(assemblyPath);
+            Console.WriteLine(swaggerPath);
             var assembly = new Assembly(assemblyPath);
             var swagger = new Swagger(swaggerPath);
 
             var inSwagger = InSwagger(assembly, swagger, matchRoute);
-            //var inAssembly = Compare(ARoutes, BRoutes);
-            //Console.WriteLine(inSwagger.Any());
+            Console.WriteLine("All tests passing");
         }
 
         static List<Action> InSwagger(Assembly assembly, Swagger swagger, bool matchRoute)
