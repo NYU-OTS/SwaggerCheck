@@ -19,7 +19,7 @@ namespace APICheck
 
             if (!simpleParamsEqual || x.Route != y.Route || x.Method != y.Method)
             {
-                Console.Error.WriteLine("No matching route" + x.Route + "with methods" + string.Join(", ", x.Method));
+                Console.Error.WriteLine(x.Route + "does not have method" + x.Method);
                 return false; //No output if not the same route+method
             }
 

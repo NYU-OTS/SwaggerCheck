@@ -21,10 +21,19 @@ namespace APICheck
                 }
             }
 
-            if (x.Type.ToString() == "Array" && y.Type.ToString() == "Array")
+            //If schema represents an array
+            if (x.Type.ToString() == "Array")
             {
-                return x.ActualSchema.Item.ActualSchema.CheckEqual(y.ActualSchema.Item.ActualSchema);
+                if (y.Type.ToString() == "Array")
+                {
+                    return x.ActualSchema.Item.ActualSchema.CheckEqual(y.ActualSchema.Item.ActualSchema);
+                }
+                {
+                    //type mismatch
+                    return false;
+                }
             }
+            
 
             return true;
         }
