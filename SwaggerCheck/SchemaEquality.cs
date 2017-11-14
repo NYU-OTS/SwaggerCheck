@@ -21,21 +21,21 @@ namespace APICheck
                 }
             }
 
-            //If schema represents an array
-            if (x.Type.ToString() == "Array")
+            
+            if (x.Type.ToString() == y.Type.ToString())
             {
+                //If schema represents an array
                 if (y.Type.ToString() == "Array")
                 {
                     return x.ActualSchema.Item.ActualSchema.CheckEqual(y.ActualSchema.Item.ActualSchema);
                 }
                 {
-                    //type mismatch
-                    return false;
+                    return true;
                 }
             }
-            
 
-            return true;
+            //Type mismatch
+            return false;
         }
     }
 }
