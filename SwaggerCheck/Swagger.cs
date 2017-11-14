@@ -17,7 +17,7 @@ namespace APICheck
     class Swagger
     {
         public Dictionary<string, List<Action>> Routes = new Dictionary<string, List<Action>>();
-
+        public int Endpoints { get; set; }
         public Swagger(string swaggerPath)
         {
             var document = SwaggerDocument.FromFileAsync(swaggerPath).Result;
@@ -32,9 +32,14 @@ namespace APICheck
                 }
                 else
                 {
-                    Routes.Add(path, new List<Action>(){new Action(operationDescription)});
+                    Routes.Add(path, new List<Action>() { new Action(operationDescription) });
                 }
             });
+
+            foreach (var r in Routes.Values)
+            {
+                Endpoints += r.Count();
+            };
         }
         
     }

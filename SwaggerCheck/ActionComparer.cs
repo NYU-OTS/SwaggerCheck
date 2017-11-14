@@ -14,11 +14,14 @@ namespace APICheck
     {
         public bool Equals(Action x, Action y)
         {
-            var kEqual = x.simpleParams.Keys.OrderBy(i => i).SequenceEqual(
+            var simpleParamsEqual = x.simpleParams.Keys.OrderBy(i => i).SequenceEqual(
                 y.simpleParams.Keys.OrderBy(i => i));
 
-            if (!kEqual || x.Route != y.Route || !x.Httpmethods.SetEquals(y.Httpmethods))
+            if (!simpleParamsEqual || x.Route != y.Route || x.Method != y.Method)
+            {
+                Console.Error.WriteLine("No matching route" + x.Route + "with methods" + string.Join(", ", x.Method));
                 return false; //No output if not the same route+method
+            }
 
             foreach (var varName in x.simpleParams.Keys)
             {

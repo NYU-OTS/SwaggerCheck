@@ -21,8 +21,10 @@ namespace APICheck
             CommandLineApplication app = new CommandLineApplication();
 
             var matchRoute = false;
-            var assemblyPath = ""; // = @"C:\Users\bt1124\SwaggerCheck\TestApi\bin\Debug\netcoreapp1.1\TestApi.dll";
-            var swaggerPath = ""; // = @"C:\Users\bt1124\SwaggerCheck\TestApi\swagger.json";
+            //var assemblyPath = "";
+            //var swaggerPath = "";
+            var assemblyPath = @"C:\Users\bt1124\SwaggerCheck\TestApi\bin\Debug\netcoreapp1.1\TestApi.dll";
+            var swaggerPath = @"C:\Users\bt1124\SwaggerCheck\TestApi\swagger.json";
 
             app.Name = "apiCheck";
             var matchRouteOption = app.Option("-r|--routes",
@@ -55,25 +57,28 @@ namespace APICheck
             });
 
             app.Execute(args);
-            Console.WriteLine(assemblyPath);
-            Console.WriteLine(swaggerPath);
             var assembly = new Assembly(assemblyPath);
             var swagger = new Swagger(swaggerPath);
 
             var inSwagger = InSwagger(assembly, swagger, matchRoute);
+            var inAssembly = InAssembly(assembly, swagger, matchRoute);
+            Console.WriteLine($"Found {swagger.Endpoints} endpoints in Swagger file");
+            Console.WriteLine($"Found {assembly.Endpoints} endpoints in API");
+            Console.WriteLine($"{inSwagger.Count} endpoints have not been implemented");
+            Console.WriteLine($"{inAssembly.Count} endpoints are implemented but are not in the Swagger file");
             Console.WriteLine("All tests passing");
         }
 
         static List<Action> InSwagger(Assembly assembly, Swagger swagger, bool matchRoute)
         {
-            return Compare(assembly.Routes, swagger.Routes, matchRoute);
+            return Compare(assembly.Routes, swagger.Routes, matchRoute, "Swagger");
         }
         static List<Action> InAssembly(Assembly assembly, Swagger swagger, bool matchRoute)
         {
-            return Compare(swagger.Routes, assembly.Routes, matchRoute);
+            return Compare(swagger.Routes, assembly.Routes, matchRoute, "Assembly");
         }
 
-        static List<Action> Compare(Dictionary<string, List<Action>> ARoutes, Dictionary<string, List<Action>> BRoutes, bool matchRoute)
+        static List<Action> Compare(Dictionary<string, List<Action>> ARoutes, Dictionary<string, List<Action>> BRoutes, bool matchRoute, string checking)
         {
             List<Action> notExist = new List<Action>();
             foreach (var route in BRoutes.Keys)
@@ -93,9 +98,6 @@ namespace APICheck
                 }
             }
             return notExist;
-
-            //Linear search in low amounts can be faster than dictionary lookup
-            //return BRoutes.Except(ARoutes, new ActionComparer()).ToList();
         }
     }
 }

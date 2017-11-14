@@ -18,7 +18,7 @@ namespace APICheck
     class Action
     {
         //public Type Controller;
-        public HashSet<string> Httpmethods { get; set; }
+        public string Method { get; set; }
         public string Route { get; set; }
         //string, int, float, bool
         public IDictionary<string, string> simpleParams { get; set; } = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
@@ -29,7 +29,6 @@ namespace APICheck
         public Action(string route, params string[] httpMethods)
         {
             Route = route;
-            Httpmethods = new HashSet<string>(httpMethods);
         }
 
         #region User property <-> LDAP attribute mapping
@@ -47,13 +46,13 @@ namespace APICheck
         #endregion
 
         //From binary
-        public Action(MethodInfo action, string baseurl)
+        public Action(MethodInfo action, string baseurl, string method)
         {
             var attribute = action.GetCustomAttribute<HttpMethodAttribute>();
             var url = baseurl + (String.IsNullOrEmpty(attribute.Template) ? attribute.Template : "/" + attribute.Template); //checks if action has associated route
 
             Route = url.Trim('/').ToLower();
-            Httpmethods = new HashSet<string>(attribute.HttpMethods);
+            Method = method;
             var ps = action.GetParameters();
 
 
@@ -90,8 +89,7 @@ namespace APICheck
         public Action(SwaggerOperationDescription action)
         {
             Route = action.Path.Trim('/').ToLower();
-            Httpmethods = new HashSet<string>();
-            Httpmethods.Add(action.Method.ToString().ToUpper()); //HttpAttributes HttpMethods are all Uppercase
+            Method = action.Method.ToString().ToUpper(); //HttpAttributes HttpMethods are all Uppercase
             
             var ps = action.Operation.ActualParameters;
             //ICollection<SwaggerParameter> complex = new List<SwaggerParameter>();

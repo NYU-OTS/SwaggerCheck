@@ -10,6 +10,7 @@ namespace APICheck
     class Assembly
     {
         public Dictionary<string, List<Action>> Routes { get; set; }
+        public int Endpoints { get; set; }
         public Assembly(string assemblyPath)
         {
             var assembly = AssemblyLoadContext.Default.LoadFromAssemblyPath(assemblyPath);
@@ -21,6 +22,11 @@ namespace APICheck
 
             Routes = controllers.SelectMany(c => c.Routes)
                     .ToDictionary(pair => pair.Key, pair => pair.Value);
+
+            foreach (var c in controllers)
+            {
+                Endpoints += c.Endpoints;
+            };
         }
     }
 }
