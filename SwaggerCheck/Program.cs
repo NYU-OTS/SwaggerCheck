@@ -62,7 +62,19 @@ namespace APICheck
             Console.WriteLine($"Found {swagger.Endpoints} endpoints in Swagger file");
             Console.WriteLine($"Found {assembly.Endpoints} endpoints in API");
             Console.WriteLine($"{inSwagger.Count} endpoints have not been implemented");
+            foreach (var action in inSwagger)
+            {
+                Console.Error.WriteLine($"No matching endpoint {action.Route} with Http method {action.Method} in API");
+            }
             Console.WriteLine($"{inAssembly.Count} endpoints are implemented but are not in the Swagger file");
+            foreach (var action in inAssembly)
+            {
+                Console.Error.WriteLine($"Endpoint {action.Route} with Http method {action.Method} implemented but does not match Swagger file");
+            }
+            if (matchRoute && (inSwagger.Any() || inAssembly.Any()))
+            {
+                Environment.Exit(1);
+            }
             Console.WriteLine("All tests passing");
         }
 
@@ -81,15 +93,7 @@ namespace APICheck
             foreach (var route in BRoutes.Keys)
             {
                 List<Action> matchingRoute;
-                if (!ARoutes.TryGetValue(route, out matchingRoute))
-                {
-                    if (matchRoute)
-                    {
-                        Console.Error.WriteLine("No matching route " + route);
-                    }
-                }
-                else
-                {
+                if (ARoutes.TryGetValue(route, out matchingRoute)) {
                     var except = matchingRoute.Except(BRoutes[route], new ActionComparer());
                     notExist.AddRange(except);
                 }
