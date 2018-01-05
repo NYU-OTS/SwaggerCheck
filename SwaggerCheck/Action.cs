@@ -9,10 +9,9 @@ namespace APICheck
 {
     class Action
     {
-        //public Type Controller;
         public string Method { get; set; }
         public string Route { get; set; }
-        //string, int, float, bool
+        //simple parameters are: string, int, float, bool
         public IDictionary<string, string> simpleParams { get; set; } = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
         //everything else
         public IDictionary<string, JsonSchema4> complexParams { get; set; } = new Dictionary<string, JsonSchema4>(StringComparer.OrdinalIgnoreCase);
@@ -23,7 +22,7 @@ namespace APICheck
             Route = route;
         }
 
-        #region User property <-> LDAP attribute mapping
+        #region C# type string <-> OpenAPI keyword
 
         private static readonly Dictionary<string, string> Mapping = new Dictionary<string, string>(
             StringComparer.OrdinalIgnoreCase)
@@ -45,34 +44,26 @@ namespace APICheck
 
             Route = url.Trim('/').ToLower();
             Method = method;
-            var ps = action.GetParameters();
-
+            var parameters = action.GetParameters();
 
             //simple params
             String alias;
-            foreach (var p in ps)
+            foreach (var parameter in parameters)
             {
-                if (Mapping.TryGetValue(p.ParameterType.ToString(), out alias)) //fails for nullable ex. RoleAssignments have int? roleFamilyId
+                var parameterType = parameter.ParameterType;
+                if (Nullable.GetUnderlyingType(parameter.ParameterType) != null) //if parameter is a nullable
                 {
-                    simpleParams.Add(p.Name.ToLower(), alias);
+                    parameterType = Nullable.GetUnderlyingType(parameter.ParameterType);
                 }
-                else if (Nullable.GetUnderlyingType(p.ParameterType) != null) //handles nullables
+
+                if (Mapping.TryGetValue(parameterType.ToString(), out alias)) //fails for nullable ex. RoleAssignments have int? roleFamilyId
                 {
-                    var innerType = Nullable.GetUnderlyingType(p.ParameterType).ToString();
-                    if (Mapping.TryGetValue(innerType, out alias)) //checks if inner type is a simpleParameter
-                    {
-                        simpleParams.Add(p.Name.ToLower(), alias);
-                    }
-                    else //handles complex parameters
-                    {
-                        var schema = JsonSchema4.FromTypeAsync(Nullable.GetUnderlyingType(p.ParameterType)).Result;
-                        complexParams.Add(p.Name.ToLower().Replace("model", ""), schema);
-                    }
+                    simpleParams.Add(parameter.Name.ToLower(), alias);
                 }
                 else
                 {
-                    var schema = JsonSchema4.FromTypeAsync(p.ParameterType).Result;
-                    complexParams.Add(p.Name.ToLower().Replace("model",""), schema); // assemblies use param names that differntiate between model and entity
+                    var schema = JsonSchema4.FromTypeAsync(parameterType).Result;
+                    complexParams.Add(parameter.Name.ToLower().Replace("model",""), schema); // assemblies use param names that differntiate between model and entity
                 }
             }
         }
@@ -83,18 +74,18 @@ namespace APICheck
             Route = action.Path.Trim('/').ToLower();
             Method = action.Method.ToString().ToUpper(); //HttpAttributes HttpMethods are all Uppercase
             
-            var ps = action.Operation.ActualParameters;
+            var parameters = action.Operation.ActualParameters;
             //ICollection<SwaggerParameter> complex = new List<SwaggerParameter>();
             //simple params
-            foreach (var p in ps)
+            foreach (var parameter in parameters)
             {
-                if (p.Type.ToString() != "None" ) //If it's not a complex type
+                if (parameter.Type.ToString() != "None" ) //If it's not a complex type
                 {
-                    simpleParams.Add(p.Name.ToLower(), p.Type.ToString().ToLower()); //typeof for primitives are all lower
+                    simpleParams.Add(parameter.Name.ToLower(), parameter.Type.ToString().ToLower()); //typeof for primitives are all lower
                 }
                 else
                 {
-                    complexParams.Add(p.Name.ToLower(), p.ActualSchema);
+                    complexParams.Add(parameter.Name.ToLower(), parameter.ActualSchema);
                 }
             }
         }

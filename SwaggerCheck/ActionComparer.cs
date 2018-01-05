@@ -23,7 +23,7 @@ namespace APICheck
                 rhs.simpleParams.TryGetValue(variable, out type);
                 if (lhs.simpleParams[variable] != rhs.simpleParams[variable])
                 {
-                    Console.Error.WriteLine("No matching parameter " + variable);
+                    Console.Error.WriteLine($"No matching parameter {variable} in {rhs.Route}");
                     return false;
                 }
             }
@@ -31,18 +31,20 @@ namespace APICheck
             foreach (var variable in lhs.complexParams.Keys)
             {
                 JsonSchema4 type;
+                //check if it's in rhs's complex parameters
                 if (rhs.complexParams.TryGetValue(variable, out type))
                 {
+                    //check if the schema is equal
                     if (!lhs.complexParams[variable].CheckEqual(type))
                     {
-                        Console.Error.WriteLine("No matching parameter " + variable);
+                        Console.Error.WriteLine($"No matching parameter {variable} in {rhs.Route}");
                         return false;
                     }
                     //else do nothing
                 }
                 else
                 {
-                    Console.Error.WriteLine("No matching parameter " + variable + " in " + rhs.Route);
+                    Console.Error.WriteLine($"No matching parameter {variable} in {rhs.Route}");
                     return false;
                 }
             }

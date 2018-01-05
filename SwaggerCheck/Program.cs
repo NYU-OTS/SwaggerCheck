@@ -64,12 +64,12 @@ namespace APICheck
             Console.WriteLine($"{inSwagger.Count} endpoints have not been implemented");
             foreach (var action in inSwagger)
             {
-                Console.Error.WriteLine($"No matching endpoint {action.Route} with Http method {action.Method} in API");
+                Console.Error.WriteLine($"Warning: No matching endpoint {action.Route} with Http method {action.Method} in API");
             }
             Console.WriteLine($"{inAssembly.Count} endpoints are implemented but are not in the Swagger file");
             foreach (var action in inAssembly)
             {
-                Console.Error.WriteLine($"Endpoint {action.Route} with Http method {action.Method} implemented but does not match Swagger file");
+                Console.Error.WriteLine($"Warning: Endpoint {action.Route} with Http method {action.Method} implemented but does not match Swagger file");
             }
             if (matchRoute && (inSwagger.Any() || inAssembly.Any()))
             {
