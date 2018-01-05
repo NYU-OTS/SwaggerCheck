@@ -1,17 +1,9 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.Linq;
-using System.Reflection;
-using System.Reflection.Emit;
-using System.Runtime.Loader;
-using Microsoft.AspNetCore.Mvc.Routing;
-using Microsoft.AspNetCore.Routing;
-using Microsoft.Extensions.Primitives;
-using Newtonsoft.Json.Linq;
+﻿using Microsoft.AspNetCore.Mvc.Routing;
 using NJsonSchema;
 using NSwag;
+using System;
+using System.Collections.Generic;
+using System.Reflection;
 
 namespace APICheck
 {

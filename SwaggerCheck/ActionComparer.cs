@@ -1,9 +1,7 @@
-﻿using System;
+﻿using NJsonSchema;
+using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using NJsonSchema;
 
 namespace APICheck
 {

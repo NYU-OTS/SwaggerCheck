@@ -2,13 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
-using System.Runtime.Loader;
 using Microsoft.Extensions.CommandLineUtils;
-using Microsoft.Extensions.WebEncoders.Testing;
-using NJsonSchema;
-using NJsonSchema.Generation;
-using NJsonSchema.Generation.TypeMappers;
 
 
 namespace APICheck
@@ -21,10 +15,10 @@ namespace APICheck
             CommandLineApplication app = new CommandLineApplication();
 
             var matchRoute = false;
-            //var assemblyPath = "";
-            //var swaggerPath = "";
-            var assemblyPath = @"C:\Users\bt1124\SwaggerCheck\TestApi\bin\Debug\netcoreapp1.1\TestApi.dll";
-            var swaggerPath = @"C:\Users\bt1124\SwaggerCheck\TestApi\swagger.json";
+            var assemblyPath = @"C:\Users\bt1124\TASTIO\TASTIO\bin\Debug\netcoreapp1.1\OTSS.TASTIO.dll";
+            var swaggerPath = @"C:\Users\bt1124\TASTIO\tastio_swagger.yaml";
+            //var assemblyPath = @"C:\Users\bt1124\SwaggerCheck\TestApi\bin\Debug\netcoreapp1.1\TestApi.dll";
+            //var swaggerPath = @"C:\Users\bt1124\SwaggerCheck\TestApi\swagger.json";
 
             app.Name = "apiCheck";
             var matchRouteOption = app.Option("-r|--routes",

@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using NJsonSchema;
 using System.Linq;
-using System.Text;
-using NJsonSchema;
 
 namespace APICheck
 {

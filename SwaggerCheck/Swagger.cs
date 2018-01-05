@@ -1,26 +1,44 @@
 ﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using NJsonSchema;
-using NJsonSchema.Infrastructure;
 using NSwag;
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
-using System.Threading.Tasks;
+using YamlDotNet.Serialization;
+using YamlDotNet.Serialization.NamingConventions;
 
 
 namespace APICheck
 {
     class Swagger
     {
-        public Dictionary<string, List<Action>> Routes = new Dictionary<string, List<Action>>();
+        public Dictionary<string, List<Action>> Routes { get; set; }
         public int Endpoints { get; set; }
+
+        /// <param name="swaggerPath">path to swagger file</param>
         public Swagger(string swaggerPath)
         {
-            var document = SwaggerDocument.FromFileAsync(swaggerPath).Result;
+            SwaggerDocument document;
+            if (Path.GetExtension(swaggerPath) == ".json")
+            {
+                document = SwaggerDocument.FromFileAsync(swaggerPath).Result;
+            }
+            else
+            {
+                var fs = new FileStream(swaggerPath, FileMode.Open);
+                var reader = new StreamReader(fs);
+                var deserializer = new Deserializer(namingConvention: new CamelCaseNamingConvention());
+                var yamlObject = deserializer.Deserialize(reader);
+
+                // now convert the object to JSON. Simple!
+                JsonSerializer js = new JsonSerializer();
+
+                var writer = new StringWriter();
+                js.Serialize(writer, yamlObject);
+                string jsonText = writer.ToString();
+                document = SwaggerDocument.FromJsonAsync(jsonText).Result;
+            }
+
+            Routes = new Dictionary<string, List<Action>>();
 
             document.Operations.ToList().ForEach(operationDescription =>
             {
@@ -32,15 +50,15 @@ namespace APICheck
                 }
                 else
                 {
-                    Routes.Add(path, new List<Action>() { new Action(operationDescription) });
+                    Routes.Add(path, new List<Action>() {new Action(operationDescription)});
                 }
             });
 
             foreach (var r in Routes.Values)
             {
                 Endpoints += r.Count();
-            };
+            }
+            ;
         }
-        
     }
 }
