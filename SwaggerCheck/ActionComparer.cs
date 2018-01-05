@@ -2,9 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Numerics;
-using System.Text;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using NJsonSchema;
 
@@ -12,41 +9,42 @@ namespace APICheck
 {
     class ActionComparer : IEqualityComparer<Action>
     {
-        public bool Equals(Action x, Action y)
+        public bool Equals(Action lhs, Action rhs)
         {
-            var simpleParamsEqual = x.simpleParams.Keys.OrderBy(i => i).SequenceEqual(
-                y.simpleParams.Keys.OrderBy(i => i));
+            var simpleParamsEqual = lhs.simpleParams.Keys.OrderBy(i => i)
+                .SequenceEqual(rhs.simpleParams.Keys.OrderBy(i => i));
 
-            if (!simpleParamsEqual || x.Route != y.Route || x.Method != y.Method)
+            if (!simpleParamsEqual || lhs.Method != rhs.Method)
             {
-                Console.Error.WriteLine(x.Route + "does not have method" + x.Method);
                 return false; //No output if not the same route+method
             }
 
-            foreach (var varName in x.simpleParams.Keys)
+            foreach (var variable in lhs.simpleParams.Keys)
             {
                 String type;
-                y.simpleParams.TryGetValue(varName, out type);
-                if (x.simpleParams[varName] != y.simpleParams[varName])
-                    Console.Error.WriteLine("No matching parameter " + varName);
-                    return false;  
+                rhs.simpleParams.TryGetValue(variable, out type);
+                if (lhs.simpleParams[variable] != rhs.simpleParams[variable])
+                {
+                    Console.Error.WriteLine("No matching parameter " + variable);
+                    return false;
+                }
             }
 
-            foreach (var schema in x.complexParams.Keys)
+            foreach (var variable in lhs.complexParams.Keys)
             {
                 JsonSchema4 type;
-                if (y.complexParams.TryGetValue(schema, out type))
+                if (rhs.complexParams.TryGetValue(variable, out type))
                 {
-                    if (!x.complexParams[schema].CheckEqual(type))
+                    if (!lhs.complexParams[variable].CheckEqual(type))
                     {
-                        Console.Error.WriteLine("No matching parameter " + schema);
+                        Console.Error.WriteLine("No matching parameter " + variable);
                         return false;
                     }
                     //else do nothing
                 }
                 else
                 {
-                    Console.Error.WriteLine("No matching parameter " + schema + " in " + y.Route);
+                    Console.Error.WriteLine("No matching parameter " + variable + " in " + rhs.Route);
                     return false;
                 }
             }

@@ -11,27 +11,29 @@ namespace APICheck
     /// </summary>
     public static class SchemaEquality
     {
-        public static bool CheckEqual(this JsonSchema4 x, JsonSchema4 y)
+        public static bool CheckEqual(this JsonSchema4 lhs, JsonSchema4 rhs)
         {
-            foreach (var property in x.ActualProperties.Keys)
+            //Types match
+            if (lhs.Type.ToString() != rhs.Type.ToString())
             {
-                if (!y.ActualProperties.Any(i => i.Key.ToLower().Contains(property.ToLower())))
+                return false;
+            }
+
+            //Check properties in schema
+            //Properties are
+            foreach (var property in lhs.ActualProperties.Keys)
+            {
+                if (!rhs.ActualProperties.Any(i => i.Key.ToLower().Contains(property.ToLower())))
                 {
                     return false;
                 }
             }
 
-            
-            if (x.Type.ToString() == y.Type.ToString())
+            //If schema represents an array
+            if (rhs.Type.ToString() == "Array")
             {
-                //If schema represents an array
-                if (y.Type.ToString() == "Array")
-                {
-                    return x.ActualSchema.Item.ActualSchema.CheckEqual(y.ActualSchema.Item.ActualSchema);
-                }
-                {
-                    return true;
-                }
+                //Get type of object in array
+                return lhs.ActualSchema.Item.ActualSchema.CheckEqual(rhs.ActualSchema.Item.ActualSchema);
             }
 
             //Type mismatch

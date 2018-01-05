@@ -57,10 +57,13 @@ namespace APICheck
             });
 
             app.Execute(args);
+
             var assembly = new Assembly(assemblyPath);
             var swagger = new Swagger(swaggerPath);
 
+            Console.WriteLine("Checking Swagger.....");
             var inSwagger = InSwagger(assembly, swagger, matchRoute);
+            Console.WriteLine("Checking Assembly.....");
             var inAssembly = InAssembly(assembly, swagger, matchRoute);
             Console.WriteLine($"Found {swagger.Endpoints} endpoints in Swagger file");
             Console.WriteLine($"Found {assembly.Endpoints} endpoints in API");
