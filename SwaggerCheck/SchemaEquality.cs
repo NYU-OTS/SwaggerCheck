@@ -1,7 +1,7 @@
 ﻿using NJsonSchema;
 using System.Linq;
 
-namespace APICheck
+namespace SwaggerCheck
 {
     /// <summary>
     /// Use to check equality of complex parameters

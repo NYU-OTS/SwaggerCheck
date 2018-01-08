@@ -7,7 +7,7 @@ using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
 
 
-namespace APICheck
+namespace SwaggerCheck
 {
     class Swagger
     {

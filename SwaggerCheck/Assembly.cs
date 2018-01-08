@@ -3,7 +3,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.Loader;
 
-namespace APICheck
+namespace SwaggerCheck
 {
     class Assembly
     {
@@ -16,7 +16,7 @@ namespace APICheck
                 .Where(type => typeof(Microsoft.AspNetCore.Mvc.Controller)
                     .IsAssignableFrom(type)) //Can instance of type be assigned to Controller? aka is controller?
                 .Where(type => type.GetTypeInfo().CustomAttributes.Any()) //Is it not the BaseController Class
-                .Select(type => new Controller(type));
+                .Select(type => new Controller(type)).ToList();
 
             Routes = controllers.SelectMany(c => c.Routes)
                     .ToDictionary(pair => pair.Key, pair => pair.Value);

@@ -3,19 +3,18 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace APICheck
+namespace SwaggerCheck
 {
     class ActionComparer : IEqualityComparer<Action>
     {
         public bool Equals(Action lhs, Action rhs)
         {
-            var simpleParamsEqual = lhs.simpleParams.Keys.OrderBy(i => i)
-                .SequenceEqual(rhs.simpleParams.Keys.OrderBy(i => i));
-
-            if (!simpleParamsEqual || lhs.Method != rhs.Method)
+            if (lhs.Method != rhs.Method)
             {
-                return false; //No output if not the same route+method
+                return false;
             }
+
+            var equals = true; //So all parameters are compared before exiting
 
             foreach (var variable in lhs.simpleParams.Keys)
             {
@@ -24,7 +23,7 @@ namespace APICheck
                 if (lhs.simpleParams[variable] != rhs.simpleParams[variable])
                 {
                     Console.Error.WriteLine($"No matching parameter {variable} in {rhs.Route}");
-                    return false;
+                    equals = false;
                 }
             }
 
@@ -37,19 +36,19 @@ namespace APICheck
                     //check if the schema is equal
                     if (!lhs.complexParams[variable].CheckEqual(type))
                     {
-                        Console.Error.WriteLine($"No matching parameter {variable} in {rhs.Route}");
-                        return false;
+                        Console.Error.WriteLine($"Parameter {variable} type mismatch");
+                        equals = false;
                     }
                     //else do nothing
                 }
                 else
                 {
                     Console.Error.WriteLine($"No matching parameter {variable} in {rhs.Route}");
-                    return false;
+                    equals = false;
                 }
             }
 
-            return true;
+            return equals;
         }
 
         public int GetHashCode(Action obj)

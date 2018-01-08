@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace APICheck
+namespace SwaggerCheck
 {
     class Controller
     {
@@ -15,14 +15,13 @@ namespace APICheck
         public Controller(Type controller)
         {
             BaseUrl = controller.GetTypeInfo()
-                .CustomAttributes.FirstOrDefault().ConstructorArguments.FirstOrDefault().Value?.ToString();//Gets the BaseUrl from the Route attribute
+                .CustomAttributes.FirstOrDefault()?.ConstructorArguments.FirstOrDefault().Value?.ToString();//Gets the BaseUrl from the Route attribute
 
             var actions = controller
                 .GetMethods(BindingFlags.Instance | BindingFlags.DeclaredOnly | BindingFlags.Public) //Instance: is instance method, DeclaredOnly: No inherited methods, Public: is public method
-                .Where(m => !m.GetCustomAttributes(typeof(System.Runtime.CompilerServices.CompilerGeneratedAttribute),true).Any()) //Filter ones with compiler-generated elements
-                .ToList();
+                .Where(m => !m.GetCustomAttributes(typeof(System.Runtime.CompilerServices.CompilerGeneratedAttribute),true).Any()); //Filter ones with compiler-generated elements: "Use the CompilerGeneratedAttribute attribute to determine whether an element is added by a compiler or authored directly in source code"
 
-            actions.ForEach(a =>
+            foreach (var a in actions)
             {
                 var methods = a.GetCustomAttribute<HttpMethodAttribute>().HttpMethods;
                 var attribute = a.GetCustomAttribute<HttpMethodAttribute>();
@@ -40,12 +39,12 @@ namespace APICheck
                         Routes.Add(path, new List<Action>() {new Action(a, BaseUrl, method)});
                     }
                 }
-            });
+            }
 
-            //sums up endpoints
+            //sums up endpoints for easy access
             foreach (var r in Routes.Values)
             {
-                Endpoints += r.Count();
+                Endpoints += r.Count;
             };
         }
     }
