@@ -1,0 +1,33 @@
+{
+  "manifestVersion": 1,
+  "id": "swagger-check",
+  "name": "SwaggerCheck",
+  "version": "0.2.0",
+  "publisher": "OTSS",
+  "targets": [
+    {
+      "id": "Microsoft.TeamFoundation.Server"
+    }
+  ],
+  "description": "Tool for checking Swagger Specification Compliance",
+  "categories": [
+    "Build and release"
+  ],
+  "files": [
+    {
+      "path": "buildtask"
+    }
+  ],
+  "contributions": [
+    {
+      "id": "custom-build-task",
+      "type": "ms.vss-distributed-task.task",
+      "targets": [
+        "ms.vss-distributed-task.tasks"
+      ],
+      "properties": {
+        "name": "buildtask"
+      }
+    }
+  ]
+}

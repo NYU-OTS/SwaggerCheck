@@ -1,0 +1,51 @@
+﻿{
+  "id": "f68fbe8c-eeb6-4c04-b19b-34ddac6dfe8c",
+  "name": "SwaggerCheck",
+  "friendlyName": "SwaggerCheck",
+  "description": "Tool for checking Swagger Specification Compliance",
+  "helpMarkDown": "",
+  "category": "Utility",
+  "author": "OTSS",
+  "version": {
+    "Major": 0,
+    "Minor": 1,
+    "Patch": 0
+  },
+  "instanceNameFormat": "SwaggerCheck",
+  "groups": [],
+  "inputs": [
+    {
+      "name": "checkRoute",
+      "type": "string",
+      "label": "Find unimplemented Swagger Routes",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Find unimplemented Swagger Routes, put -r "
+    },
+    {
+      "name": "swaggerPath",
+      "type": "filePath",
+      "label": "Swagger File Path",
+      "required": true,
+      "defaultValue": "",
+      "helpMarkDown": "Path of the Swagger File."
+    },
+    {
+      "name": "assemblyPath",
+      "type": "filePath",
+      "label": "Assembly File Path",
+      "required": true,
+      "defaultValue": "",
+      "helpMarkDown": "Path of the Assembly File."
+    }
+  ],
+  "execution": {
+    "execution": {
+      "Process": {
+        "target": "SwaggerCheck.exe",
+        "argumentFormat": "-s $(swaggerPath) -b $(assemblyPath) $(checkRoute)",
+        "workingDirectory": "$(workingFolder)"
+      }
+    }
+  }
+}
