@@ -2,7 +2,7 @@
   "manifestVersion": 1,
   "id": "swagger-check",
   "name": "SwaggerCheck",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "publisher": "OTSS",
   "targets": [
     {
