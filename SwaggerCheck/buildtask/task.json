@@ -40,12 +40,10 @@
     }
   ],
   "execution": {
-    "execution": {
       "Process": {
         "target": "SwaggerCheck.exe",
         "argumentFormat": "-s $(swaggerPath) -b $(assemblyPath) $(checkRoute)",
         "workingDirectory": "$(workingFolder)"
       }
     }
-  }
 }
