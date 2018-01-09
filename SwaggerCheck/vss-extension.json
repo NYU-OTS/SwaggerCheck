@@ -6,7 +6,7 @@
   "publisher": "OTSS",
   "targets": [
     {
-      "id": "Microsoft.TeamFoundation.Server"
+      "id": "Microsoft.VisualStudio.Services"
     }
   ],
   "description": "Tool for checking Swagger Specification Compliance",
