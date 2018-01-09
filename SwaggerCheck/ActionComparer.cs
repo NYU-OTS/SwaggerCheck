@@ -2,13 +2,21 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Extensions.Logging;
 
 namespace SwaggerCheck
 {
     class ActionComparer : IEqualityComparer<Action>
     {
+        private readonly ILogger _logger;
+
+        public ActionComparer(ILoggerFactory loggerFactory)
+        {
+            _logger = loggerFactory.CreateLogger<ActionComparer>();
+        }
         public bool Equals(Action lhs, Action rhs)
         {
+            _logger.LogDebug("Comparing");
             if (lhs.Method != rhs.Method)
             {
                 return false;

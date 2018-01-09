@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.CommandLineUtils;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -11,18 +10,27 @@ namespace SwaggerCheck
 {
     class Program
     {
+        private static ILoggerFactory _loggerFactory;
+
+        static Program()
+        {
+        }
+
         static void Main(string[] args)
         {
             //setup our DI
             var serviceProvider = new ServiceCollection()
                 .AddLogging()
                 .AddSingleton<SwaggerCheck, SwaggerCheck>()
+                .AddSingleton<ActionComparer, ActionComparer>()
                 .BuildServiceProvider();
 
             //configure console logging
             serviceProvider
                 .GetService<ILoggerFactory>()
                 .AddConsole(LogLevel.Debug);
+
+            _loggerFactory = serviceProvider.GetService<ILoggerFactory>();
 
             var logger = serviceProvider.GetService<ILoggerFactory>()
                 .CreateLogger<Program>();
@@ -51,7 +59,7 @@ namespace SwaggerCheck
             {
                 List<Action> matchingRoute;
                 if (ARoutes.TryGetValue(route, out matchingRoute)) {
-                    var except = matchingRoute.Except(BRoutes[route], new ActionComparer());
+                    var except = matchingRoute.Except(BRoutes[route], new ActionComparer(_loggerFactory));
                     notExist.AddRange(except);
                 }
             }
