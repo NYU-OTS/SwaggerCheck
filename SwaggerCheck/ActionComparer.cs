@@ -8,15 +8,8 @@ namespace SwaggerCheck
 {
     class ActionComparer : IEqualityComparer<Action>
     {
-        private readonly ILogger _logger;
-
-        public ActionComparer(ILoggerFactory loggerFactory)
-        {
-            _logger = loggerFactory.CreateLogger<ActionComparer>();
-        }
         public bool Equals(Action lhs, Action rhs)
         {
-            _logger.LogDebug("Comparing");
             if (lhs.Method != rhs.Method)
             {
                 return false;
@@ -30,7 +23,7 @@ namespace SwaggerCheck
                 rhs.simpleParams.TryGetValue(variable, out type);
                 if (lhs.simpleParams[variable] != rhs.simpleParams[variable])
                 {
-                    Console.Error.WriteLine($"No matching parameter {variable} in {rhs.Route}");
+                    Console.Error.WriteLine($"No matching parameter '{variable}' in {rhs.Route}");
                     equals = false;
                 }
             }
@@ -44,14 +37,14 @@ namespace SwaggerCheck
                     //check if the schema is equal
                     if (!lhs.complexParams[variable].CheckEqual(type))
                     {
-                        Console.Error.WriteLine($"Parameter {variable} type mismatch");
+                        Console.Error.WriteLine($"Parameter '{variable}' type mismatch");
                         equals = false;
                     }
                     //else do nothing
                 }
                 else
                 {
-                    Console.Error.WriteLine($"No matching parameter {variable} in {rhs.Route}");
+                    Console.Error.WriteLine($"No matching parameter '{variable}' in {rhs.Route}");
                     equals = false;
                 }
             }

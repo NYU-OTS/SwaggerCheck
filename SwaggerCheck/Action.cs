@@ -46,24 +46,25 @@ namespace SwaggerCheck
             Method = method;
             var parameters = action.GetParameters();
 
-            //simple params
+            //process parameters
             String alias;
             foreach (var parameter in parameters)
             {
                 var parameterType = parameter.ParameterType;
-                if (Nullable.GetUnderlyingType(parameter.ParameterType) != null) //if parameter is a nullable
+                if (Nullable.GetUnderlyingType(parameter.ParameterType) != null) //If parameter is a nullable
                 {
                     parameterType = Nullable.GetUnderlyingType(parameter.ParameterType);
                 }
 
-                if (Mapping.TryGetValue(parameterType.ToString(), out alias)) //fails for nullable ex. RoleAssignments have int? roleFamilyId
+                if (Mapping.TryGetValue(parameterType.ToString(), out alias)) //Handles nullables
                 {
                     simpleParams.Add(parameter.Name.ToLower(), alias);
                 }
                 else
                 {
                     var schema = JsonSchema4.FromTypeAsync(parameterType).Result;
-                    complexParams.Add(parameter.Name.ToLower().Replace("model",""), schema); // assemblies use param names that differntiate between model and entity
+                    //TODO: make this handle general inconsistencies between naming
+                    complexParams.Add(parameter.Name.ToLower().Replace("model",""), schema); //Souce code use param names that differntiate between model and entity
                 }
             }
         }
