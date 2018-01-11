@@ -1,1 +1,3 @@
 ﻿*.vsix
+buildtask/*
+vss-extension.json
