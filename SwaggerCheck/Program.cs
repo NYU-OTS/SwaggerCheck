@@ -10,8 +10,6 @@ namespace SwaggerCheck
 {
     class Program
     {
-        private static ILoggerFactory _loggerFactory;
-
         static Program()
         {
         }
@@ -21,7 +19,6 @@ namespace SwaggerCheck
             CommandLineApplication app = new CommandLineApplication();
 
             var matchRoute = false;
-            var verbose = false;
             string assemblyPath = "";
             string swaggerPath = "";
 
@@ -40,6 +37,7 @@ namespace SwaggerCheck
 
             app.OnExecute(() =>
             {
+                //TODO: change options to arguments https://msdn.microsoft.com/en-us/magazine/mt763239.aspx
                 matchRoute = matchRouteOption.HasValue();
                 if (swaggerRouteOption.HasValue())
                 {
@@ -53,6 +51,18 @@ namespace SwaggerCheck
             });
 
             app.Execute(args);
+
+
+            if(!File.Exists(assemblyPath))
+            {
+                Console.Error.WriteLine($"{assemblyPath} is not a valid path");
+                Environment.Exit(1);
+            }
+            if (!File.Exists(swaggerPath))
+            {
+                Console.Error.WriteLine($"{assemblyPath} is not a valid path");
+                Environment.Exit(1);
+            }
 
             var assembly = new Assembly(assemblyPath);
             var swagger = new Swagger(swaggerPath);
@@ -75,6 +85,7 @@ namespace SwaggerCheck
             }
             if (matchRoute && (inSwagger.Any() || inAssembly.Any()))
             {
+                Console.Error.WriteLine("Tests failing");
                 Environment.Exit(1);
             }
             Console.WriteLine("All tests passing");
