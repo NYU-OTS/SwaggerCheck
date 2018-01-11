@@ -38,10 +38,6 @@ And an example output:
 
 ![alt text](./Examples/windows-output.png)
 
-## Deployment
-
-Add additional notes about how to deploy this on a live system
-
 ## Contributing
 
 Examples for SwaggerCheck being used on other systems would be greatly appreciated, as well as any suggestions to improve SwaggerCheck.
