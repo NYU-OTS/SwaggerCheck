@@ -54,7 +54,7 @@ namespace SwaggerCheck
 
         public int GetHashCode(Action obj)
         {
-            return 0;
+            return 0; //TODO Figure out a better thing to do here
         }
     }
 }

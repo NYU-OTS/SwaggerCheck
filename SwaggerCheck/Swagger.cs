@@ -6,15 +6,20 @@ using System.Linq;
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
 
-
 namespace SwaggerCheck
 {
+    /// <summary>
+    /// An abstraction of a Swagger document
+    /// </summary>
     class Swagger
     {
         public Dictionary<string, List<Action>> Routes { get; set; }
         public int Endpoints { get; set; }
 
-        /// <param name="swaggerPath">path to swagger file</param>
+        /// <summary>
+        /// A constructor that creates a Swagger object from a file
+        /// </summary>
+        /// <param name="swaggerPath">Path to Swagger file</param>
         public Swagger(string swaggerPath)
         {
             SwaggerDocument document;
@@ -26,7 +31,7 @@ namespace SwaggerCheck
             {
                 var fs = new FileStream(swaggerPath, FileMode.Open);
                 var reader = new StreamReader(fs);
-                var deserializer = new Deserializer(namingConvention: new CamelCaseNamingConvention());
+                var deserializer = new Deserializer(namingConvention: new CamelCaseNamingConvention()); //TODO this is deprecated, update to use deserializer
                 var yamlObject = deserializer.Deserialize(reader);
 
                 // now convert the object to JSON. Simple!

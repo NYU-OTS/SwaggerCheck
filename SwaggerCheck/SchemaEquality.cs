@@ -8,7 +8,7 @@ namespace SwaggerCheck
     /// </summary>
     public static class SchemaEquality
     {
-        public static bool CheckEqual(this JsonSchema4 lhs, JsonSchema4 rhs)
+        public static bool CheckEqual(this JsonSchema4 lhs, JsonSchema4 rhs) //TODO make this an extension
         {
             //Types match
             if (lhs.Type.ToString() != rhs.Type.ToString())

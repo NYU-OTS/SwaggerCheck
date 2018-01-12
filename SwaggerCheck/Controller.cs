@@ -6,6 +6,9 @@ using System.Reflection;
 
 namespace SwaggerCheck
 {
+    /// <summary>
+    /// An abstraction of a API Controller
+    /// </summary>
     class Controller
     {
         public Dictionary<string, List<Action>> Routes = new Dictionary<string, List<Action>>();

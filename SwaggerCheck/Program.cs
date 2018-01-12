@@ -96,8 +96,8 @@ namespace SwaggerCheck
         /// <summary>
         /// In Swagger but not in Assembly
         /// </summary>
-        /// <param name="assembly"></param>
-        /// <param name="swagger"></param>
+        /// <param name="assembly">The generated Assembly object</param>
+        /// <param name="swagger">The generated Swagger object</param>
         /// <returns></returns>
         static List<Action> InSwagger(Assembly assembly, Swagger swagger)
         {
@@ -107,8 +107,8 @@ namespace SwaggerCheck
         /// <summary>
         /// In Assembly but not in Swagger
         /// </summary>
-        /// <param name="assembly"></param>
-        /// <param name="swagger"></param>
+        /// <param name="assembly">The generated Assembly object</param>
+        /// <param name="swagger">The generated Swagger object</param>
         /// <returns></returns>
         static List<Action> InAssembly(Assembly assembly, Swagger swagger)
         {
@@ -116,12 +116,10 @@ namespace SwaggerCheck
         }
 
         /// <summary>
-        /// 
+        /// Compares the routes and returns the differences
         /// </summary>
-        /// <param name="ARoutes"></param>
-        /// <param name="BRoutes"></param>
-        /// <param name="matchRoute"></param>
-        /// <param name="checking"></param>
+        /// <param name="ARoutes">A dictionary with keys being the route and value being the actions</param>
+        /// <param name="BRoutes">A dictionary with keys being the route and value being the actions</param>
         /// <returns>A list of Action in A but not in B</returns>
         static List<Action> Compare(Dictionary<string, List<Action>> ARoutes, Dictionary<string, List<Action>> BRoutes)
         {
