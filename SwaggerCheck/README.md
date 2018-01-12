@@ -29,6 +29,7 @@ It also supports an optional which will exit the program with a non-zero status 
 ### Windows
 
 Below is an example of how SwaggerCheck would be used in a Windows system.
+Build the Api first so that a build output is produced.
 
 ```
 SwaggerCheck.exe -b "[Path to API repository]\bin\Debug\netcoreapp1.1\TestApi.dll" -s "[Path to API repository]\swagger.json"
@@ -36,11 +37,11 @@ SwaggerCheck.exe -b "[Path to API repository]\bin\Debug\netcoreapp1.1\TestApi.dl
 
 And an example output:  
 
-![alt text](./Examples/windows-output.png)
+![alt text](./Examples/default-api-project.png)
 
 ## Contributing
 
-Examples for SwaggerCheck being used on other systems would be greatly appreciated, as well as any suggestions to improve SwaggerCheck.
+Examples for SwaggerCheck being used on other systems would be greatly appreciated as well as any suggestions to improve SwaggerCheck.
 
 ## License
 

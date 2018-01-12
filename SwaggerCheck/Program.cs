@@ -64,51 +64,79 @@ namespace SwaggerCheck
                 Environment.Exit(1);
             }
 
+
+            Console.WriteLine($"Program fail on mismatch: {matchRoute}");
+
             var assembly = new Assembly(assemblyPath);
             var swagger = new Swagger(swaggerPath);
 
             Console.WriteLine("Checking Swagger.....");
-            var inSwagger = InSwagger(assembly, swagger, matchRoute);
+            var notInAssembly = InSwagger(assembly, swagger);
             Console.WriteLine("Checking Assembly.....");
-            var inAssembly = InAssembly(assembly, swagger, matchRoute);
+            var notInSwagger = InAssembly(assembly, swagger);
             Console.WriteLine($"Found {swagger.Endpoints} endpoints in Swagger file");
             Console.WriteLine($"Found {assembly.Endpoints} endpoints in API");
-            Console.WriteLine($"{inSwagger.Count} endpoints have not been implemented");
-            foreach (var action in inSwagger)
+            Console.WriteLine($"{notInAssembly.Count} endpoints have not been implemented");
+            foreach (var action in notInAssembly)
             {
                 Console.Error.WriteLine($"Warning: No matching endpoint {action.Route} with Http method {action.Method} in API");
             }
-            Console.WriteLine($"{inAssembly.Count} endpoints are implemented but are not in the Swagger file");
-            foreach (var action in inAssembly)
+            Console.WriteLine($"{notInSwagger.Count} endpoints are implemented but are not in the Swagger file");
+            foreach (var action in notInSwagger)
             {
                 Console.Error.WriteLine($"Warning: Endpoint {action.Route} with Http method {action.Method} implemented but does not match Swagger file");
             }
-            if (matchRoute && (inSwagger.Any() || inAssembly.Any()))
+            if (matchRoute && (notInAssembly.Any() || notInAssembly.Any()))
             {
                 Console.Error.WriteLine("Tests failing");
                 Environment.Exit(1);
             }
-            Console.WriteLine("All tests passing");
         }
 
-        static List<Action> InSwagger(Assembly assembly, Swagger swagger, bool matchRoute)
+        /// <summary>
+        /// In Swagger but not in Assembly
+        /// </summary>
+        /// <param name="assembly"></param>
+        /// <param name="swagger"></param>
+        /// <returns></returns>
+        static List<Action> InSwagger(Assembly assembly, Swagger swagger)
         {
-            return Compare(assembly.Routes, swagger.Routes, matchRoute, "Swagger");
-        }
-        static List<Action> InAssembly(Assembly assembly, Swagger swagger, bool matchRoute)
-        {
-            return Compare(swagger.Routes, assembly.Routes, matchRoute, "Assembly");
+            return Compare(swagger.Routes, assembly.Routes);
         }
 
-        static List<Action> Compare(Dictionary<string, List<Action>> ARoutes, Dictionary<string, List<Action>> BRoutes, bool matchRoute, string checking)
+        /// <summary>
+        /// In Assembly but not in Swagger
+        /// </summary>
+        /// <param name="assembly"></param>
+        /// <param name="swagger"></param>
+        /// <returns></returns>
+        static List<Action> InAssembly(Assembly assembly, Swagger swagger)
+        {
+            return Compare(assembly.Routes, swagger.Routes);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="ARoutes"></param>
+        /// <param name="BRoutes"></param>
+        /// <param name="matchRoute"></param>
+        /// <param name="checking"></param>
+        /// <returns>A list of Action in A but not in B</returns>
+        static List<Action> Compare(Dictionary<string, List<Action>> ARoutes, Dictionary<string, List<Action>> BRoutes)
         {
             List<Action> notExist = new List<Action>();
-            foreach (var route in BRoutes.Keys)
+            foreach (var route in ARoutes.Keys)
             {
                 List<Action> matchingRoute;
-                if (ARoutes.TryGetValue(route, out matchingRoute)) {
-                    var except = matchingRoute.Except(BRoutes[route], new ActionComparer());
+                if (BRoutes.TryGetValue(route, out matchingRoute))
+                {
+                    var except = ARoutes[route].Except(matchingRoute, new ActionComparer());
                     notExist.AddRange(except);
+                }
+                else
+                {
+                    notExist.AddRange(ARoutes[route]);
                 }
             }
             return notExist;

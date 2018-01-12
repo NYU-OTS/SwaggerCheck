@@ -1,0 +1,32 @@
+﻿{
+	"swagger": "2.0",
+  "info": {
+    "title": "TestApi.OTSS",
+    "description": "An OTSS API to test SwaggerChecker",
+    "version": "1.0.0"
+  },
+	"host": "localhost",
+  "paths": {
+    "/": {
+      "get": {
+        "operationId": "root",
+        "summary": "Show the API version number",
+        "responses": {
+          "200": {
+            "description": "The API version number",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "version": {
+                  "type": "string",
+                  "format": "version",
+                  "example": "1.0.0"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

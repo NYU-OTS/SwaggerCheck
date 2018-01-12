@@ -40,6 +40,7 @@ namespace SwaggerCheck
         public Action(MethodInfo action, string baseurl, string method)
         {
             var attribute = action.GetCustomAttribute<HttpMethodAttribute>();
+            //TODO add support for [action]
             var url = baseurl + (String.IsNullOrEmpty(attribute.Template) ? attribute.Template : "/" + attribute.Template); //checks if action has associated route
 
             Route = url.Trim('/').ToLower();

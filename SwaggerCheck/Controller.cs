@@ -14,8 +14,12 @@ namespace SwaggerCheck
 
         public Controller(Type controller)
         {
-            BaseUrl = controller.GetTypeInfo()
+            var routeAttribute = controller.GetTypeInfo()
                 .CustomAttributes.FirstOrDefault()?.ConstructorArguments.FirstOrDefault().Value?.ToString();//Gets the BaseUrl from the Route attribute
+
+            var name = controller.Name.Replace("Controller", "");
+
+            BaseUrl = routeAttribute.Replace("[controller]", name);
 
             var actions = controller
                 .GetMethods(BindingFlags.Instance | BindingFlags.DeclaredOnly | BindingFlags.Public) //Instance: is instance method, DeclaredOnly: No inherited methods, Public: is public method
