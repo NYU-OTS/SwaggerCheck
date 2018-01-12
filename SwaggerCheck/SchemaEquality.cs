@@ -17,7 +17,6 @@ namespace SwaggerCheck
             }
 
             //Check properties in schema
-            //Properties are
             foreach (var property in lhs.ActualProperties.Keys)
             {
                 if (!rhs.ActualProperties.Any(i => i.Key.ToLower().Contains(property.ToLower())))
