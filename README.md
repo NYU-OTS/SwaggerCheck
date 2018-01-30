@@ -23,7 +23,7 @@ Check the [.Net RID Catalog](https://docs.microsoft.com/en-us/dotnet/core/rid-ca
 
 ## Testing the program
 
-The include test API is generated from the default Visual Studio API template for .NET Core 2.0, with minor adjustment to make it 1.1 compatiable.
+The include Test API is generated from the default Visual Studio API template for .NET Core 2.0, with minor adjustment to make it 1.1 compatiable.
 
 ## Using the program
 
@@ -51,4 +51,4 @@ SwaggerCheck is build using C# Refelction and the NJsonSchema library and would 
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+This project is licensed under the MIT License
